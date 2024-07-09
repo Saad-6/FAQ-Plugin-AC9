@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PluginManifest>
+  <Name>FAQPlugin</Name>
+  <Title>FAQ</Title>
+  <LogoUrl>
+https://png.pngtree.com/png-vector/20220607/ourmid/pngtree-faq-icon-on-white-background-png-image_4915284.png
+
+</LogoUrl>
+  <ConfigUrl>~/Admin/FAQ</ConfigUrl>
+  <Description>FAQ Plugin Desctiption</Description>
+  <Author>AbleCommerce</Author>
+  <Version>1.0.0</Version>
+  <SupportedVersion>9.0.0</SupportedVersion>
+  <PluginCategory>General</PluginCategory>
+  <PluginTypeName>FAQPlugin.FAQPlugin</PluginTypeName>
+  <PluginAssemblyName>FAQPlugin</PluginAssemblyName>
+  <ShowInAdminMenu>true</ShowInAdminMenu>
+</PluginManifest>
