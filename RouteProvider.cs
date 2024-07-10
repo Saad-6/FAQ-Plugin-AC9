@@ -25,7 +25,7 @@ namespace FAQPlugin
                 var route = routes.MapRoute(
                     "Plugins_General_FAQPlugin_Retail",
                     "FAQRetail/{action}",
-                    new { controller = "EPPRetail" },
+                    new { controller = "FAQRetail" },
                     new[] { "FAQPlugin.Controllers" }
                 );
             }
