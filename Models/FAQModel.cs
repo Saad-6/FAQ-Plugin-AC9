@@ -18,6 +18,14 @@ namespace FAQPlugin.Models
         [Description("User who asked the question")]
         public int UserId { get; set; }
 
+        [DisplayName("Username")]
+        [Description("Username of the user who asked the question")]
+        public string UserName { get; set; }
+
+        [DisplayName("Login status of user")]
+        [Description("Shows different FAQ table depending on if the user is logged in or not")]
+        public bool IsUserLoggedIn { get; set; }
+
         [DisplayName("Question")]
         [Description("The Question asked related to this product")]
         public string Question { get; set; }

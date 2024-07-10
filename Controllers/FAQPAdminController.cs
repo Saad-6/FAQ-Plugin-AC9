@@ -1,4 +1,6 @@
 using System.Web.Mvc;
+using System;
+using System.Web;
 namespace FAQPlugin.Controllers
 {
     using System.Linq;
@@ -12,7 +14,7 @@ namespace FAQPlugin.Controllers
         public ActionResult Index() { 
         
         
-            return View("~/Plugins/FAQPlugin/Views/Index.cshtml");
+            return PartialView("~/Plugins/FAQPlugin/Views/Index.cshtml");
         }
 
     }
