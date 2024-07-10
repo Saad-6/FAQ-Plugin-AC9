@@ -1,1 +1,1 @@
-# FQA-Plugin-AC9
+# FAQ-Plugin-AC9
