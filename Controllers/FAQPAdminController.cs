@@ -14,7 +14,7 @@ namespace FAQPlugin.Controllers
         public ActionResult Index() { 
         
         
-            return PartialView("~/Plugins/FAQPlugin/Views/Index.cshtml");
+            return View("~/Plugins/FAQPlugin/Views/Index.cshtml");
         }
 
     }

@@ -1,7 +1,7 @@
 @model FAQModelParams
 
-<div id="tabs" class="tabs product-tabs">
-    <h3 class="collapsed" style="cursor:pointer;" data-toggle="collapse" href="#tab-con"> Frequently Asked Questions</h3>
+<div id="tabs" class="tabs product-tabs" style="margin-top:20px">
+    <h3 class="collapsed nav nav-tabs"  style="cursor:pointer;background-color:white;min-height:50px;align-content:center" data-toggle="collapse" href="#tab-con"> Frequently Asked Questions</h3>
     <div id="tab-con" class="tab-content collapse">
         <div class="ibox-content">
             <div id="accordion" role="tablist" aria-multiselectable="true">
@@ -65,16 +65,16 @@
 
                 <!-- Add more FAQ items here in the same format -->
 
+            <button type="button" class="btn btn-primary"style="margin:10px 0px;align-content:center" data-toggle="modal" data-target="#askQuestionModal">Ask a Question</button>
+        <div class="pull-right mx-3">
+        </div>
             </div>
+    <!-- Button to Open the Modal -->
+    <div class="sticky-footer  ">
+    </div>
         </div>
     </div>
 
-    <!-- Button to Open the Modal -->
-    <div class="sticky-footer mt-5">
-        <div class="pull-right">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#askQuestionModal">Ask a Question</button>
-        </div>
-    </div>
 
     <!-- The Modal -->
     <div class="modal fade" id="askQuestionModal" tabindex="-1" role="dialog" aria-labelledby="askQuestionModalLabel" aria-hidden="true">

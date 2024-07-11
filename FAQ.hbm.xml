@@ -19,8 +19,5 @@
 		<property name="ProductId" type="int">
 			<column name="ProductId" not-null="true" />
 		</property>
-		<property name="IsAnswered" type="bool">
-			<column name="IsAnswered" not-null="true" sql-type="bit" />
-		</property>
 	</class>
 </hibernate-mapping>

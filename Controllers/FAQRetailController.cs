@@ -5,7 +5,9 @@ namespace FAQPlugin.Controllers
     using CommerceBuilder.Common;
     using CommerceBuilder.Products;
     using CommerceBuilder.Web.Mvc;
+    using NHibernate;
     using System;
+    using System.Configuration;
     using System.Web.Mvc;
     using RegisterWidget = CommerceBuilder.Web.RegisterWidget;
     using WidgetCategory = CommerceBuilder.CMS.WidgetCategory;
@@ -14,10 +16,12 @@ namespace FAQPlugin.Controllers
     {
         private readonly IProductRepository _productRepo;
         private readonly IFAQRepository _faqRepository;
+        private readonly MyNHibernateHelper _NHibernateHelper;
         public FAQRetailController(IProductRepository productRepo, IFAQRepository faqRepository)
         {
             _productRepo = productRepo;
             _faqRepository = faqRepository;
+            _NHibernateHelper = new MyNHibernateHelper();
         }
         public ActionResult Index() {
 
@@ -51,14 +55,32 @@ namespace FAQPlugin.Controllers
             if (ModelState.IsValid && productId != 0) {
                 var faq = new FAQ()
                 {
-                    IsAnswered = true,
                     Question = question,
                     ProductId = productId,
                     UserId = userId,
                     CreatedDate = createdDate,
                 };
 
-                _faqRepository.Save(faq);
+                // Different Approach
+                using (var session = _NHibernateHelper.GetSession())
+                {
+                    
+                    using (ITransaction _transaction = session.BeginTransaction())
+                    {
+                        try
+                        {
+                            session.Save(faq);
+
+                        }
+                        catch
+                        {
+                            _transaction.Rollback();
+                        }
+                    }
+
+                }
+               //
+              //  _faqRepository.Save(faq);
 
             return Json(new { success = true, message = "Question submitted successfully!" });
 

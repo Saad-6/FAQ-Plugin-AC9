@@ -1,24 +1,35 @@
 ﻿using CommerceBuilder.DomainModel;
+using NHibernate.Mapping.ByCode;
+using NHibernate.Mapping.ByCode.Conformist;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FAQPlugin.Models
+namespace FAQPlugin
 {
     public class FAQ : Entity
     {
-        public int Id { get; set; }
-        public bool IsAnswered { get; set; }
-        public int ProductId { get; set; }
-        public int UserId { get; set; }
+        public override int Id { get; set; }
         [Required]
-        public string Question { get; set; }
-        public string Answer { get; set; }
-        public DateTime CreatedDate { get; set; }
-
+        public virtual int ProductId { get; set; }
+        public virtual int UserId { get; set; }
+        [Required]
+        public virtual string Question { get; set; }
+        public virtual string Answer { get; set; }
+        public virtual DateTime CreatedDate { get; set; }
+       
     }
+    public class FAQMap : ClassMapping<FAQ>
+    {
+        public FAQMap()
+        {
+            Table("FAQ");
+            Id(x => x.Id, map => map.Generator(Generators.Native));
+            Property(x => x.ProductId, map => map.NotNullable(true));
+            Property(x => x.UserId);
+            Property(x => x.Question, map => map.NotNullable(true));
+            Property(x => x.Answer);
+            Property(x => x.CreatedDate);
+        }
+    }
+
 }

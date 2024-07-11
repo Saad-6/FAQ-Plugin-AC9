@@ -10,17 +10,6 @@ namespace FAQPlugin
     [RegisterFor(typeof(IFAQRepository))]
     public class FAQRepository : Repository<FAQ>, IFAQRepository
     {
-        //public bool Add(FAQModel model)
-        //{
-        //    if (model == null)
-        //    {
-        //        return false;
-        //    }
-            
-        //    Save(model);
-
-        //    return true;
-        //}
         public IList<FAQ> LoadAllProductQuestions(int productId) {
 
             var productQuestions = NHibernateHelper.CreateCriteria<FAQ>()
