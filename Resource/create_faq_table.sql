@@ -7,9 +7,11 @@ GO
 CREATE TABLE [dbo].[FAQ](
     [Id] [int] IDENTITY(1,1) NOT NULL,
     [Question] [nvarchar](255) NOT NULL,
-    [Answer] [nvarchar](255) NOT NULL,
+    [Answer] [nvarchar](255) NULL,
     [UserId] [int] NULL,
     [CreatedDate] [datetime] NULL,
+    [ProductId] [int] NOT NULL,
+   [IsAnswered] [bit] NOT NULL DEFAULT 0,
  CONSTRAINT [PK_FAQ] PRIMARY KEY CLUSTERED 
 (
     [Id] ASC

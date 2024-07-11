@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="FAQPlugin.FAQ, FAQPlugin" table="FAQ" lazy="true" dynamic-update="true">
+		<id name="Id" column="Id" type="int">
+			<generator class="native" />
+		</id>
+		<property name="Question" type="string">
+			<column name="Question" not-null="true" sql-type="nvarchar(255)" />
+		</property>
+		<property name="Answer" type="string">
+			<column name="Answer" not-null="false" sql-type="nvarchar(255)" />
+		</property>
+		<property name="UserId" type="int">
+			<column name="UserId" not-null="false" />
+		</property>
+		<property name="CreatedDate" type="CommerceBuilder.DomainModel.LocalDateTime, CommerceBuilder">
+			<column name="CreatedDate" not-null="true" />
+		</property>
+		<property name="ProductId" type="int">
+			<column name="ProductId" not-null="true" />
+		</property>
+		<property name="IsAnswered" type="bool">
+			<column name="IsAnswered" not-null="true" sql-type="bit" />
+		</property>
+	</class>
+</hibernate-mapping>

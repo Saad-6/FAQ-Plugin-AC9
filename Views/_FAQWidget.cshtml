@@ -86,48 +86,47 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form id="ask-question-form" method="post" action="SubmitQuestion")">
+                @using (Ajax.BeginForm("SubmitQuestion", null, new AjaxOptions() { OnSuccess = "handleQuestionSubmitted" }, new { id = "ask-question-form", @class = "form" }))
+                {
+                    <div class="modal-body">
                         <div class="form-group">
                             <label for="question">Your Question</label>
                             @Html.TextArea("question", null, new { @class = "form-control", @placeholder = "Type your question here...", @required = "required" })
+                            @Html.Hidden("productId", Model.ProductId)
+                           
                         </div>
-                        @Html.AntiForgeryToken()
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="submit-question">Submit Question</button>
-                </div>
+                        <div class="modal-footer ">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" id="submit-question">Submit Question</button>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
 </div>
-@section Sctipts{
-    
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#submit-question').on('click', function (e) {
-            e.preventDefault();
-            var form = $('#ask-question-form');
+@section Scripts{
+    <script type="text/javascript">
+        function handleQuestionSubmitted(response) {
+            // Handle the success response from the server after submitting the question
+            alert('Your question has been submitted successfully!');
+            $('#askQuestionModal').modal('hide');
+        }
+
+        $('#ask-question-form').submit(function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var formData = $(this).serializeArray();
+            console.log(formData); // Log form data to the console for debugging
+
+            // Submit the form data via AJAX
             $.ajax({
-                type: form.attr('method'),
-                url: form.attr('action'),
-                data: form.serialize(),
-                success: function (response) {
-                    handleQuestionSubmitted(response);
-                },
-                error: function () {
-                    alert('There was an error submitting your question. Please try again.');
-                }
+                type: $(this).attr('method'),
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: handleQuestionSubmitted
             });
         });
-    });
+    </script>
+}
 
-    function handleQuestionSubmitted(response) {
-        // Handle the success response from the server after submitting the question
-        alert('Your question has been submitted successfully!');
-        $('#askQuestionModal').modal('hide');
-    }
-</script>
-    }
