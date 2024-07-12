@@ -1,7 +1,7 @@
 @model FAQModelParams
 
 <div id="tabs" class="tabs product-tabs" style="margin-top:20px">
-    <h3 class="collapsed nav nav-tabs"  style="cursor:pointer;background-color:white;min-height:50px;align-content:center" data-toggle="collapse" href="#tab-con"> Frequently Asked Questions</h3>
+    <h3 class="collapsed nav nav-tabs" style="cursor:pointer;background-color:white;min-height:50px;align-content:center" data-toggle="collapse" href="#tab-con"> Frequently Asked Questions</h3>
     <div id="tab-con" class="tab-content collapse">
         <div class="ibox-content">
             <div id="accordion" role="tablist" aria-multiselectable="true">
@@ -65,13 +65,13 @@
 
                 <!-- Add more FAQ items here in the same format -->
 
-            <button type="button" class="btn btn-primary"style="margin:10px 0px;align-content:center" data-toggle="modal" data-target="#askQuestionModal">Ask a Question</button>
-        <div class="pull-right mx-3">
-        </div>
+                <button type="button" class="btn btn-primary" style="margin:10px 0px;align-content:center" data-toggle="modal" data-target="#askQuestionModal">Ask a Question</button>
+                <div class="pull-right mx-3">
+                </div>
             </div>
-    <!-- Button to Open the Modal -->
-    <div class="sticky-footer  ">
-    </div>
+            <!-- Button to Open the Modal -->
+            <div class="sticky-footer  ">
+            </div>
         </div>
     </div>
 
@@ -93,7 +93,7 @@
                             <label for="question">Your Question</label>
                             @Html.TextArea("question", null, new { @class = "form-control", @placeholder = "Type your question here...", @required = "required" })
                             @Html.Hidden("productId", Model.ProductId)
-                           
+
                         </div>
                         <div class="modal-footer ">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -105,26 +105,28 @@
         </div>
     </div>
 </div>
-@section Scripts{
+@section Scripts {
     <script type="text/javascript">
         function handleQuestionSubmitted(response) {
             // Handle the success response from the server after submitting the question
-            alert('Your question has been submitted successfully!');
+            toastr.success('Query Submitted', 'Success');
             $('#askQuestionModal').modal('hide');
         }
 
-        $('#ask-question-form').submit(function (event) {
-            event.preventDefault(); // Prevent the default form submission
+        $(function () {
+            $('#ask-question-form').submit(function (event) {
+                event.preventDefault(); // Prevent the default form submission
 
-            var formData = $(this).serializeArray();
-            console.log(formData); // Log form data to the console for debugging
-
-            // Submit the form data via AJAX
-            $.ajax({
-                type: $(this).attr('method'),
-                url: $(this).attr('action'),
-                data: $(this).serialize(),
-                success: handleQuestionSubmitted
+                // Submit the form data via AJAX
+                $.ajax({
+                    type: $(this).attr('method'),
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: handleQuestionSubmitted,
+                    error: function () {
+                        toastr.error('An error occurred while submitting your question.', 'Error');
+                    }
+                });
             });
         });
     </script>

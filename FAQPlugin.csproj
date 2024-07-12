@@ -129,7 +129,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\FAQPAdminController.cs" />
+    <Compile Include="Controllers\FAQAdminController.cs" />
     <Compile Include="Controllers\FAQRetailController.cs" />
     <Compile Include="FAQMapping.cs" />
     <Compile Include="FAQRepository.cs" />
@@ -164,7 +164,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="FAQ.hbm.xml" />
+    <EmbeddedResource Include="FAQ.hbm.xml" />
     <Content Include="PluginManifest.xml">
       <SubType>Designer</SubType>
     </Content>

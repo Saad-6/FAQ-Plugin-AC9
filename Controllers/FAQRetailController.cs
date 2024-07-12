@@ -60,27 +60,11 @@ namespace FAQPlugin.Controllers
                     UserId = userId,
                     CreatedDate = createdDate,
                 };
+                var model = new FAQMap();
+                
 
-                // Different Approach
-                using (var session = _NHibernateHelper.GetSession())
-                {
-                    
-                    using (ITransaction _transaction = session.BeginTransaction())
-                    {
-                        try
-                        {
-                            session.Save(faq);
 
-                        }
-                        catch
-                        {
-                            _transaction.Rollback();
-                        }
-                    }
-
-                }
-               //
-              //  _faqRepository.Save(faq);
+              _faqRepository.Save(faq);
 
             return Json(new { success = true, message = "Question submitted successfully!" });
 
