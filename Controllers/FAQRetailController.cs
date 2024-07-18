@@ -9,6 +9,7 @@ namespace FAQPlugin.Controllers
     using System;
     using System.Configuration;
     using System.Web.Mvc;
+    using static AbleCommerce.Models.Checkout.ShipEstimateQuoteModel;
     using RegisterWidget = CommerceBuilder.Web.RegisterWidget;
     using WidgetCategory = CommerceBuilder.CMS.WidgetCategory;
 
@@ -32,12 +33,14 @@ namespace FAQPlugin.Controllers
         [RegisterWidget(DisplayName = "Frequently Asked Questions", Category = WidgetCategory.Product, Description = "Displays the most frequently asked questions related with the product.")]
         public ActionResult FAQWidget(Models.FAQModelParams parameters)
         {
+
             if (parameters.ProductId == 0) { 
             
                 parameters.ProductId  = PageHelper.GetProductId();
             }
             var product = _productRepo.Load(parameters.ProductId);
-
+            var questions = _faqRepository.LoadAnsweredProductQuestions(parameters.ProductId);
+            parameters.fAQs = questions;
             if (product == null) {
                 
             return HttpNotFound();
@@ -52,6 +55,8 @@ namespace FAQPlugin.Controllers
            
             var createdDate = DateTime.Now;
 
+            var product = _productRepo.Load(productId);
+
             if (ModelState.IsValid && productId != 0) {
                 var faq = new FAQ()
                 {
@@ -59,10 +64,11 @@ namespace FAQPlugin.Controllers
                     ProductId = productId,
                     UserId = userId,
                     CreatedDate = createdDate,
+                    IsAnswered = false,
+                    Visibility = true,
+                    ProductName=product.Name
                 };
-                var model = new FAQMap();
-                
-
+         
 
               _faqRepository.Save(faq);
 
@@ -71,5 +77,15 @@ namespace FAQPlugin.Controllers
             }
             return Json(new { success = false, message = "An Error Occured" });
         }
+        //public ActionResult GetProductsQuestions(int productId) { 
+        
+        //    //var questions=_faqRepository.LoadAnsweredProductQuestions(productId);
+        //    //FAQModelParams parameters = new FAQModelParams();
+        //    //parameters.ProductId = productId;
+        //    //parameters.fAQs = questions;
+        //    //return PartialView("~/Plugins/FAQPlugin/Views/_FAQWidget.cshtml",parameters);
+
+        //}
+       
     }
 }

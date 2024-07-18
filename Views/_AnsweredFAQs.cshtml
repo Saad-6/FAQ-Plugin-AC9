@@ -1,0 +1,68 @@
+@model IList<FAQ>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th><b>Sr</b></th>
+            <th>Product Name</th>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>Visibility</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var faq in Model)
+        {
+            <tr>
+                <td><b>@Model.IndexOf(faq) + 1</b></td>
+                <td><b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = faq.ProductId })">@faq.ProductName</a></b></td>
+                <td>@faq.Question</td>
+                <td>
+                    <a href="#" class="answer-link" data-toggle="modal" data-target="#editAnswerModal">
+                        @faq.Answer
+                    </a>
+                </td>
+              
+                <td class="text-center">
+                    @using (Ajax.BeginForm("ChangeVisibility", "FAQAdmin", new { id = faq.Id, visibility = !faq.Visibility }, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "faq-list", OnSuccess = "toggleIcon" }))
+                    {
+                        <button type="submit" class="btn btn-link">
+                            <i id="iconid" class="fa @(faq.Visibility ? "fa-eye" : "fa-eye-slash")"></i>
+                        </button>
+                    }
+                </td>
+            </tr>
+
+            <div class="modal fade" id="editAnswerModal" tabindex="-1" role="dialog" aria-labelledby="editAnswerModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editAnswerModalLabel">Edit Answer</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            @using (Html.BeginForm("UpdateAnswer", "FAQAdmin", FormMethod.Post))
+                            {
+                                <label class="col-form-label"><h3><b>@faq.Question</b></h3></label>
+                                <div class="form-group">
+                                    <label for="answerText"  class="col-form-label">Answer:</label>
+                                    <input type="text" placeholder="@faq.Answer" class="form-control" name="answer" id="answerText">
+                                    <input type="number" hidden name="id" value="@faq.Id">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Update changes</button>
+                                </div>
+                            }
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        }
+    </tbody>
+</table>
+
+

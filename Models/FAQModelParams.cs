@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using CommerceBuilder.Products;
@@ -28,6 +29,8 @@ namespace FAQPlugin.Models
         [DisplayName("Asked Date")]
         [Description("Question asked at :")]
         public DateTime CreatedDate { get; set; }
+
+        public IList<FAQ> fAQs { get; set; }
     }
 
    

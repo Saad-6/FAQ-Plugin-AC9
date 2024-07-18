@@ -12,11 +12,14 @@ namespace FAQPlugin
     {
         int GetAllCount();
         IList<FAQ> LoadAllProductQuestions(int productId);
+        FAQ LoadQuestionById(int id);
+        IList<FAQ> LoadAllQuestions();
+        IList<FAQ> LoadAllAnsweredQuestions();
+        IList<FAQ> LoadUnAnsweredQuestions();
         IList<FAQ> LoadAnsweredProductQuestions(int productId);
         int GetPendingCount();
         int GetAnsweredCount();
         IList<FAQ> GetAll();
-        //bool Add(FAQModel model);
         bool Update(FAQ model);
         bool Remove (FAQ model);
 

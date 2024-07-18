@@ -1,0 +1,58 @@
+@model IList<FAQ>
+<table class="table table-striped ">
+    <thead>
+        <tr>
+            <th><b>Sr</b></th>
+            <th>Product Name</th>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>Is Answered Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var allQuestions in Model)
+        {
+
+            <tr id="">
+                <td><b>Sr</b></td>
+                <td><b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = allQuestions.ProductId })">@allQuestions.ProductName </a></b></td>
+                <td>@allQuestions.Question</td>
+                <td><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = 5 })">@allQuestions.Answer</a></td>
+                <td text-center">@allQuestions.IsAnswered</td>
+                <td><button class="btn btn-danger" data-toggle="modal" data-target="#confirmaDeletionModal">Delete</button></td>
+            </tr>
+            <div class="modal fade" id="confirmaDeletionModal" tabindex="-1" role="dialog" aria-labelledby="confirmaDeletionModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmaDeletionModalLabel">Delete Question</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                           
+                                @using (Html.BeginForm("DeleteFAQ", "FAQAdmin", FormMethod.Post))
+                                {
+                                    <label class="col-form-label"><h3><b>@allQuestions.Question</b></h3></label>
+                                    <div class="form-group">
+                                        <label for="answerText" class="col-form-label">Are you sure you want to delete the question ?</label>
+                                        <label for="answerText" class="col-form-label"><small>You will not be able to undo this action</small></label>
+                                        <input name="id" value="@allQuestions.Id" hidden/>
+                                    </div>
+                                   
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                                }
+                               
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </tbody>
+</table>

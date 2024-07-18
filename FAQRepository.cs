@@ -13,21 +13,49 @@ namespace FAQPlugin
         public IList<FAQ> LoadAllProductQuestions(int productId) {
 
             var productQuestions = NHibernateHelper.CreateCriteria<FAQ>()
-            .Add(Restrictions.Eq("ProductId", productId));
+            .Add(Restrictions.Eq("ProductId", productId))
+            .Add(Restrictions.Eq("Visibility", true));
+
 
             return productQuestions.List<FAQ>();
 
         }
+        public FAQ LoadQuestionById(int id)
+        {
+            var criteria = NHibernateHelper.CreateCriteria<FAQ>()
+            .Add(Restrictions.Eq("Id", id));
+
+            return criteria.UniqueResult<FAQ>();
+        }
         public IList<FAQ> LoadAnsweredProductQuestions(int productId) {
 
-            var productQuestionsAnswered = NHibernateHelper.CreateCriteria<FAQ>()
+            var loadAnsweredProductQuestions = NHibernateHelper.CreateCriteria<FAQ>()
             .Add(Restrictions.Eq("ProductId", productId))
             .Add(Restrictions.Eq("IsAnswered", true));
-             return productQuestionsAnswered.List<FAQ>();
+             return loadAnsweredProductQuestions.List<FAQ>();
+
+        }
+        public IList<FAQ> LoadAllQuestions()
+        {
+            var loadAllQuestions = NHibernateHelper.CreateCriteria<FAQ>();
+           
+            return loadAllQuestions.List<FAQ>();    
+        }
+        public IList<FAQ> LoadAllAnsweredQuestions()
+        {
+            var loadAllAnsweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
+          .Add(Restrictions.Eq("IsAnswered", true));
+            return loadAllAnsweredQuestions.List<FAQ>();
 
         }
 
+        public IList<FAQ> LoadUnAnsweredQuestions()
+        {
+            var loadAllUnansweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
+          .Add(Restrictions.Eq("IsAnswered", false));
+            return loadAllUnansweredQuestions.List<FAQ>();
 
+        }
         public IList<FAQ> GetAll()
         {
             var entities = NHibernateHelper.CreateCriteria<FAQ>().List<FAQ>();
@@ -73,7 +101,13 @@ namespace FAQPlugin
 
         public bool Update(FAQ model)
         {
-            return false;
+            if(model == null)
+            {
+                return false;
+            }
+
+            Save(model);
+            return true;
         }
     }
 }

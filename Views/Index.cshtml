@@ -3,7 +3,6 @@
     ViewBag.PageCaption = "Frequently Asked Questions";
 }
 <div class="wrapper wrapper-content animated fadeInRight">
-
     <div class="ibox float-e-margins py-3">
         <div class="ibox-title">
             <h5>Manage FAQs</h5>
@@ -12,9 +11,8 @@
             <div id="tabs" class="tabs product-tabs">
                 <ul class="nav nav-tabs" role="tablist">
                     <li id="answerQuestionsTab" class="active">
-                        <a href="#answerQuestionsPane" role="tab" data-toggle="tab" aria-controls="answer-questions" aria-expanded="true">UnAnswered Questions</a>
+                        <a href="#unanswerQuestionsPane" role="tab" data-toggle="tab" aria-controls="answer-questions" aria-expanded="true">UnAnswered Questions</a>
                     </li>
-
                     <li id="answeredQuestionsTab">
                         <a href="#answeredQuestionsPane" role="tab" data-toggle="tab" aria-controls="answered-questions" aria-expanded="false">Answered Questions</a>
                     </li>
@@ -23,113 +21,23 @@
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active in" id="answerQuestionsPane">
-                        <div class="container-fluid bg-light py-3">
-                            <table class="table table-striped px-3">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>Product</th>
-                                        <th>Question</th>
-                                        <th>Answer</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Dummy Data -->
-                                    <tr>
-                                        <td class="py-3">Product 1</td>
-                                        <td class="py-3">What is the return policy?</td>
-                                        <td class="py-3">
-                                            <input type="text" class="form-control" placeholder="Type your answer here">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="py-3">Product 2</td>
-                                        <td class="py-3">How long is the warranty?</td>
-                                        <td class="py-3">
-                                            <input type="text" class="form-control" placeholder="Type your answer here">
-                                        </td>
-                                    </tr>
-                                    <!-- Add more dummy questions as needed -->
-                                </tbody>
-                            </table>
-                            <div class="text-center">
-                                <button class="btn btn-primary">Submit Answers</button>
-                            </div>
-                        </div>
+
+                    <div role="tabpanel" class="tab-pane active in" id="unanswerQuestionsPane">
+
+                        @Html.Action("Unanswered", "FAQAdmin")
+
                     </div>
 
-
-
                     <div role="tabpanel" class="tab-pane" id="answeredQuestionsPane">
-                        <div class="container-fluid bg-light py-3">
-                            <table class="table table-striped px-3">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>Product</th>
-                                        <th>Question</th>
-                                        <th>Answer</th>
-                                        <th>Edit Answer</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Dummy Data -->
-                                    <tr>
-                                        <td class="py-3">Product 1</td>
-                                        <td class="py-3">What is the return policy?</td>
-                                        <td class="py-3">You can return the product within 30 days.</td>
-                                        <td class="py-3">
-                                            <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editAnswerModal" data-answer="You can return the product within 30 days.">Edit</button>
-                                        </td>
-                                    </tr>
-                                    <!-- Add more dummy questions as needed -->
-                                </tbody>
-                            </table>
-                        </div>
+
+                        @Html.Action("Answered", "FAQAdmin")
+
                     </div>
 
                     <div role="tabpanel" class="tab-pane" id="allQuestionsPane">
-                        <div class="container-fluid bg-light py-3">
-                            <table class="table table-striped px-3">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>Product</th>
-                                        <th>Question</th>
-                                        <th>Answer</th>
-                                        <th>Status</th>
-                                        <th>Edit Answer</th>
-                                        <th>Delete Question</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Dummy Data -->
-                                    <tr>
-                                        <td class="py-3">Product 1</td>
-                                        <td class="py-3">What is the return policy?</td>
-                                        <td class="py-3">You can return the product within 30 days.</td>
-                                        <td class="py-3">Answered</td>
-                                        <td class="py-3">
-                                            <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editAnswerModal" data-answer="You can return the product within 30 days.">Edit</button>
-                                        </td>
-                                        <td class="py-3">
-                                            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirmaDeletionModal" >Delete</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="py-3">Product 2</td>
-                                        <td class="py-3">How long is the warranty?</td>
-                                        <td class="py-3"></td>
-                                        <td class="py-3">Unanswered</td>
-                                        <td class="py-3">
-                                            <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editAnswerModal" data-answer="">Edit</button>
-                                        </td>
-                                        <td class="py-3">
-                                            <button class="btn btn-sm btn-danger">Delete</button>
-                                        </td>
-                                    </tr>
-                                    <!-- Add more dummy questions as needed -->
-                                </tbody>
-                            </table>
-                        </div>
+
+                        @Html.Action("All", "FAQAdmin")
+
                     </div>
                 </div>
             </div>
@@ -137,66 +45,39 @@
     </div>
 </div>
 
+
+
 <!-- Edit Answer Modal -->
-<div class="modal fade" id="editAnswerModal" tabindex="-1" role="dialog" aria-labelledby="editAnswerModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editAnswerModalLabel">Edit Answer</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="answerText" class="col-form-label">Answer:</label>
-                        <input type="text" class="form-control" id="answerText">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="confirmaDeletionModal" tabindex="-1" role="dialog" aria-labelledby="confirmaDeletionModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmaDeletionModalLabel">Delete Question</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="answerText" class="col-form-label">Are you sure you want to delete the question ?</label>
-                        <label for="answerText" class="col-form-label"><small>You will not be able to undo this action</small></label>
-                        
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger">Delete </button>
-            </div>
-        </div>
-    </div>
-</div>
-@section Scripts{
 
+
+@section Scripts {
     <script>
-        $('#editAnswerModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var answer = button.data('answer'); // Extract info from data-* attributes
-            var modal = $(this);
-            modal.find('.modal-body input').val(answer);
-        });
+        function toggleIcon(data) {
+            console.log("toggle icon triggered");
+            let element = document.getElementById("iconid");
+            if (element) {
+                let currentClass = element.className;
+                if (currentClass.includes("fa fa-eye")) {
+                    element.classList.remove("fa", "fa-eye");
+                    element.classList.add("fa", "fa-eye-slash");
+                } else if (currentClass.includes("fa fa-eye-slash")) {
+                    element.classList.remove("fa", "fa-eye-slash");
+                    element.classList.add("fa", "fa-eye");
+                }
+                else if (currentClass.includes("fa-eye-slash fa")) {
+                    element.classList.remove("fa-eye-slash", "fa");
+                    element.classList.add("fa", "fa-eye");
+                }
+                else if (currentClass.includes("fa-eye fa")) {
+                    element.classList.remove("fa-eye", "fa");
+                    element.classList.add("fa", "fa-eye-slash");
+                }
+            } else {
+                console.error(`Element with ID "iconid" not found.`);
+            }
+        }
     </script>
-
 }

@@ -8,28 +8,26 @@ namespace FAQPlugin
 {
     public class FAQ : Entity
     {
+                    //Question = question,
+                    //ProductId = productId,
+                    //UserId = userId,
+                    //CreatedDate = createdDate,
+                    //IsAnswered = false,
+                    //Visibility = true,
+                    //ProductName=product.Name
         public override int Id { get; set; }
         [Required]
         public virtual int ProductId { get; set; }
+        public virtual string ProductName { get; set; }
         public virtual int UserId { get; set; }
         [Required]
         public virtual string Question { get; set; }
+        public virtual bool IsAnswered { get; set; } 
+        public virtual bool Visibility { get; set; }
         public virtual string Answer { get; set; }
         public virtual DateTime CreatedDate { get; set; }
        
     }
-    public class FAQMap : ClassMapping<FAQ>
-    {
-        public FAQMap()
-        {
-            Table("FAQ");
-            Id(x => x.Id, map => map.Generator(Generators.Native));
-            Property(x => x.ProductId, map => map.NotNullable(true));
-            Property(x => x.UserId);
-            Property(x => x.Question, map => map.NotNullable(true));
-            Property(x => x.Answer);
-            Property(x => x.CreatedDate);
-        }
-    }
+  
 
 }

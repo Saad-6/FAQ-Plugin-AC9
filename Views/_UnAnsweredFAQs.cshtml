@@ -1,0 +1,54 @@
+@model IList<FAQ>
+<table class="table table-striped ">
+    <thead>
+        <tr>
+            <th><b>Sr</b></th>
+            <th>Product Name</th>
+            <th>Question</th>
+            <th>Answer</th>
+          
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var unAnsweredQuestions in Model)
+        {
+
+            <tr id="">
+                <td><b>Sr</b></td>
+                <td><b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = unAnsweredQuestions.ProductId })">@unAnsweredQuestions.ProductName </a></b></td>
+                <td>@unAnsweredQuestions.Question</td>
+                <td><button class="btn btn-primary" data-toggle="modal" data-target="#AnswerModal">Give Answer</button></td>
+                
+            </tr>
+
+            <!-- Answer Modal -->
+            <div class="modal fade" id="AnswerModal" tabindex="-1" role="dialog" aria-labelledby="AnswerModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editAnswerModalLabel"> Answer</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            @using (Html.BeginForm("UpdateAnswer", "FAQAdmin", FormMethod.Post))
+                            {
+                                <label class="col-form-label"><h3><b>@unAnsweredQuestions.Question</b></h3></label>
+                                <div class="form-group">
+                                    <label for="answerText" class="col-form-label">Answer:</label>
+                                    <input type="text" class="form-control" name="answer" id="answerText">
+                                    <input type="number" hidden name="id" value="@unAnsweredQuestions.Id">
+                                </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </tbody>
+</table>
