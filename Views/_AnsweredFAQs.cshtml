@@ -1,5 +1,35 @@
-@model IList<FAQ>
 
+@using PagedList.Mvc
+@using PagedList;
+@model StaticPagedList<QuestionsViewModel>
+@{
+
+    int index = ((Model.PageNumber - 1) * Model.PageSize) + 1;
+}
+@using (Ajax.BeginForm("Answered",
+        new AjaxOptions
+        {
+            HttpMethod = "GET",
+            UpdateTargetId = "answeredQuestionsPane"
+        }))
+{
+    <input type="hidden" value="@ViewBag.pageSize" />
+    <div class="form-group" style="max-width:150px;">
+        <label for="exampleSelect">Select Size</label>
+        <select class="form-control" id="exampleSelect" name="pageSize" onchange="$(this).submit()">
+            <option value="">@ViewBag.CurrentPageSize</option>
+            <option value="-1">Show All</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+           
+        </select>
+    </div>
+
+}
 <table class="table table-striped">
     <thead>
         <tr>
@@ -14,17 +44,17 @@
         @foreach (var faq in Model)
         {
             <tr>
-                <td><b>@Model.IndexOf(faq) + 1</b></td>
-                <td><b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = faq.ProductId })">@faq.ProductName</a></b></td>
+                <td><b>@index</b></td>
+                <td><b><a>@faq.ProductName</a></b></td>
                 <td>@faq.Question</td>
                 <td>
                     <a href="#" class="answer-link" data-toggle="modal" data-target="#editAnswerModal">
                         @faq.Answer
                     </a>
                 </td>
-              
+
                 <td class="text-center">
-                    @using (Ajax.BeginForm("ChangeVisibility", "FAQAdmin", new { id = faq.Id, visibility = !faq.Visibility }, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "faq-list", OnSuccess = "toggleIcon" }))
+                    @using (Ajax.BeginForm("ChangeVisibility", "FAQAdmin", new { id = faq.FAQId, visibility = !faq.Visibility }, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "faq-list", OnSuccess = "toggleIcon" }))
                     {
                         <button type="submit" class="btn btn-link">
                             <i id="iconid" class="fa @(faq.Visibility ? "fa-eye" : "fa-eye-slash")"></i>
@@ -47,9 +77,10 @@
                             {
                                 <label class="col-form-label"><h3><b>@faq.Question</b></h3></label>
                                 <div class="form-group">
-                                    <label for="answerText"  class="col-form-label">Answer:</label>
-                                    <input type="text" placeholder="@faq.Answer" class="form-control" name="answer" id="answerText">
-                                    <input type="number" hidden name="id" value="@faq.Id">
+                                    <label for="answerText" class="col-form-label">Answer:</label>
+                                    <input type="text" required placeholder="@faq.Answer" class="form-control" name="answer" id="answerText">
+
+                                    <input type="number" hidden name="id" value="@faq.FAQId">
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -57,12 +88,22 @@
                                 </div>
                             }
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
+            index++;
         }
     </tbody>
 </table>
 
+<div class="pagination-wrapper">
+
+
+    @Html.PagedListPager(Model,
+    page => Url.Action("Answered",
+    new { pageNumber = page, pageSize = ViewBag.pageSize }),
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "answeredQuestionsPane" }))
+
+</div>
 

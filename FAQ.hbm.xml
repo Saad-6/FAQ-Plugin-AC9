@@ -16,20 +16,21 @@
 		<property name="CreatedDate" type="CommerceBuilder.DomainModel.LocalDateTime, CommerceBuilder">
 			<column name="CreatedDate" not-null="true" />
 		</property>
-		<property name="ProductId" type="int">
-			<column name="ProductId" not-null="true" />
-		</property>
-		<property name="ProductName" type="string">
-			<column name="ProductName" not-null="true" sql-type="nvarchar(255)" />
-		</property>
-
-
 		<property name="IsAnswered" type="bool">
 			<column name="IsAnswered" not-null="true" />
 		</property>
 		<property name="Visibility" type="bool">
 			<column name="Visibility" not-null="true" />
 		</property>
+		<many-to-one name="Product" class="CommerceBuilder.Products.Product, CommerceBuilder.Products" column="ProductId" not-null="true" />
 
 	</class>
 </hibernate-mapping>
+
+		<!--
+		<property name="ProductId" type="int">
+			<column name="ProductId" not-null="true" />
+		</property>
+		
+		-->
+		

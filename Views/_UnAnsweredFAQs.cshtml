@@ -1,4 +1,35 @@
-@model IList<FAQ>
+@using PagedList.Mvc
+@using PagedList;
+@model StaticPagedList<QuestionsViewModel>
+@{
+
+    int index = ((Model.PageNumber - 1) * Model.PageSize) + 1;
+}
+@using (Ajax.BeginForm("Unanswered",
+        new AjaxOptions
+        {
+            HttpMethod = "GET",
+            UpdateTargetId = "unanswerQuestionsPane"
+        }))
+{
+    <input type="hidden" value="@ViewBag.pageSize" />
+    <div class="form-group" style="max-width:150px;">
+        <label for="exampleSelect">Select Size</label>
+        <select class="form-control" id="exampleSelect" name="pageSize" onchange="$(this).submit()">
+            <option value="">@ViewBag.CurrentPageSize</option>
+            <option value="-1">Show All</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+          
+        </select>
+    </div>
+
+}
+
 <table class="table table-striped ">
     <thead>
         <tr>
@@ -6,7 +37,7 @@
             <th>Product Name</th>
             <th>Question</th>
             <th>Answer</th>
-          
+
         </tr>
     </thead>
     <tbody>
@@ -14,11 +45,11 @@
         {
 
             <tr id="">
-                <td><b>Sr</b></td>
-                <td><b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = unAnsweredQuestions.ProductId })">@unAnsweredQuestions.ProductName </a></b></td>
+                <td><b>@index</b></td>
+                <td><b><a href="#">@unAnsweredQuestions.ProductName </a></b></td>
                 <td>@unAnsweredQuestions.Question</td>
                 <td><button class="btn btn-primary" data-toggle="modal" data-target="#AnswerModal">Give Answer</button></td>
-                
+
             </tr>
 
             <!-- Answer Modal -->
@@ -37,18 +68,30 @@
                                 <label class="col-form-label"><h3><b>@unAnsweredQuestions.Question</b></h3></label>
                                 <div class="form-group">
                                     <label for="answerText" class="col-form-label">Answer:</label>
-                                    <input type="text" class="form-control" name="answer" id="answerText">
-                                    <input type="number" hidden name="id" value="@unAnsweredQuestions.Id">
+                                    <input type="text" required class="form-control"  name="answer" id="answerText">
+
+                                    <input type="number" hidden name="id" value="@unAnsweredQuestions.FAQId">
                                 </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
-                        </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
                             }
                         </div>
                     </div>
                 </div>
             </div>
+            index++;
         }
     </tbody>
 </table>
+
+<div class="pagination-wrapper">
+
+
+    @Html.PagedListPager(Model,
+    page => Url.Action("Unanswered",
+    new { pageNumber = page, pageSize = ViewBag.pageSize }),
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "unanswerQuestionsPane" }))
+
+</div>

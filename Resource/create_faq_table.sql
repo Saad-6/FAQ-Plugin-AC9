@@ -11,7 +11,6 @@ CREATE TABLE [dbo].[FAQ](
     [UserId] [int] NULL,
     [CreatedDate] [datetime] NULL,
     [ProductId] [int] NOT NULL,
-    [ProductName] [nvarchar](255) NOT NULL,
     [IsAnswered] [bit] NULL,
     [Visibility] [bit] NULL,
  CONSTRAINT [PK_FAQ] PRIMARY KEY CLUSTERED 

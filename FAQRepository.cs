@@ -1,7 +1,5 @@
 ﻿using CommerceBuilder.DomainModel;
-using FAQPlugin.Models;
 using NHibernate.Criterion;
-using System;
 using System.Collections.Generic;
 
 namespace FAQPlugin
@@ -27,24 +25,47 @@ namespace FAQPlugin
 
             return criteria.UniqueResult<FAQ>();
         }
-        public IList<FAQ> LoadAnsweredProductQuestions(int productId) {
-
-            var loadAnsweredProductQuestions = NHibernateHelper.CreateCriteria<FAQ>()
-            .Add(Restrictions.Eq("ProductId", productId))
-            .Add(Restrictions.Eq("IsAnswered", true));
-             return loadAnsweredProductQuestions.List<FAQ>();
-
+        public IList<FAQ> LoadAnsweredProductQuestions(int productId)
+        {
+                 var loadAnsweredProductQuestions = NHibernateHelper.CreateCriteria<FAQ>()
+                .CreateAlias("Product", "product") 
+                .Add(Restrictions.Eq("product.Id", productId)) 
+                .Add(Restrictions.Eq("IsAnswered", true))
+                .Add(Restrictions.Eq("Visibility", true));
+                
+            return loadAnsweredProductQuestions.List<FAQ>();
         }
         public IList<FAQ> LoadAllQuestions()
         {
             var loadAllQuestions = NHibernateHelper.CreateCriteria<FAQ>();
            
             return loadAllQuestions.List<FAQ>();    
+        } 
+        public IList<FAQ> LoadAllQuestions(int pageSize, int startIndex)
+        {
+
+            var loadAllQuestions = NHibernateHelper.CreateCriteria<FAQ>()
+           .SetFirstResult(startIndex)
+           .SetMaxResults(pageSize);
+
+            return loadAllQuestions.List<FAQ>();    
         }
         public IList<FAQ> LoadAllAnsweredQuestions()
         {
             var loadAllAnsweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
-          .Add(Restrictions.Eq("IsAnswered", true));
+           .Add(Restrictions.Eq("IsAnswered", true));
+
+            return loadAllAnsweredQuestions.List<FAQ>();
+
+        }
+        public IList<FAQ> LoadAllAnsweredQuestions(int pageSize, int startIndex)
+        {
+
+            var loadAllAnsweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
+           .Add(Restrictions.Eq("IsAnswered", true))
+           .SetFirstResult(startIndex)
+           .SetMaxResults(pageSize);
+
             return loadAllAnsweredQuestions.List<FAQ>();
 
         }
@@ -53,6 +74,17 @@ namespace FAQPlugin
         {
             var loadAllUnansweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
           .Add(Restrictions.Eq("IsAnswered", false));
+
+            return loadAllUnansweredQuestions.List<FAQ>();
+
+        } 
+        public IList<FAQ> LoadUnAnsweredQuestions(int pageSize,int startIndex)
+        {
+            var loadAllUnansweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
+           .Add(Restrictions.Eq("IsAnswered", false))
+           .SetFirstResult(startIndex) 
+           .SetMaxResults(pageSize); 
+
             return loadAllUnansweredQuestions.List<FAQ>();
 
         }
@@ -63,11 +95,14 @@ namespace FAQPlugin
             return entities;
             
         }
-
-        public int GetAllCount()
+        public IList<FAQ> GetAll(int pageSize , int startIndex )
         {
-          return CountAll();
-         
+            var entities = NHibernateHelper.CreateCriteria<FAQ>()
+            .SetFirstResult(startIndex)
+            .SetMaxResults(pageSize).List<FAQ>();
+               
+            return entities;
+            
         }
 
         public int GetAnsweredCount()

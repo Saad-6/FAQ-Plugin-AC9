@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FAQPlugin.Models
+﻿namespace FAQPlugin.Models
 {
     public class QuestionsViewModel
     {
-        public IList<FAQ> AllAnsweredQuestions { get; set; }
-        public IList<FAQ> AllUnAnsweredQuestions { get; set; }
-        public IList<FAQ> AllQuestions { get; set; }
+        public int FAQId { get; set; }
+      public string ProductName { get; set; }
+      public string Question { get; set; }
+      public string Answer { get; set; }
+      public bool IsAnswered { get; set; }
+      public bool Visibility { get; set; }  
 
     }
 }

@@ -1,15 +1,11 @@
 ﻿using AbleCommerce.Code;
-using FAQPlugin.Models;
 namespace FAQPlugin.Controllers
 {
     using CommerceBuilder.Common;
     using CommerceBuilder.Products;
     using CommerceBuilder.Web.Mvc;
-    using NHibernate;
     using System;
-    using System.Configuration;
     using System.Web.Mvc;
-    using static AbleCommerce.Models.Checkout.ShipEstimateQuoteModel;
     using RegisterWidget = CommerceBuilder.Web.RegisterWidget;
     using WidgetCategory = CommerceBuilder.CMS.WidgetCategory;
 
@@ -23,11 +19,6 @@ namespace FAQPlugin.Controllers
             _productRepo = productRepo;
             _faqRepository = faqRepository;
             _NHibernateHelper = new MyNHibernateHelper();
-        }
-        public ActionResult Index() {
-
-
-            return View("~/Plugins/FAQPlugin/Views/Index.cshtml");
         }
 
         [RegisterWidget(DisplayName = "Frequently Asked Questions", Category = WidgetCategory.Product, Description = "Displays the most frequently asked questions related with the product.")]
@@ -57,16 +48,21 @@ namespace FAQPlugin.Controllers
 
             var product = _productRepo.Load(productId);
 
+            if (question == "") {
+                Response.StatusCode = 400;
+                
+                return Json(new { success = false, message = "Input Field Cannot be Empty" });
+            }
+
             if (ModelState.IsValid && productId != 0) {
                 var faq = new FAQ()
                 {
                     Question = question,
-                    ProductId = productId,
+                    Product = product,
                     UserId = userId,
                     CreatedDate = createdDate,
                     IsAnswered = false,
                     Visibility = true,
-                    ProductName=product.Name
                 };
          
 
@@ -77,15 +73,7 @@ namespace FAQPlugin.Controllers
             }
             return Json(new { success = false, message = "An Error Occured" });
         }
-        //public ActionResult GetProductsQuestions(int productId) { 
         
-        //    //var questions=_faqRepository.LoadAnsweredProductQuestions(productId);
-        //    //FAQModelParams parameters = new FAQModelParams();
-        //    //parameters.ProductId = productId;
-        //    //parameters.fAQs = questions;
-        //    //return PartialView("~/Plugins/FAQPlugin/Views/_FAQWidget.cshtml",parameters);
-
-        //}
        
     }
 }

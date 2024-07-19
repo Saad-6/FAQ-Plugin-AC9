@@ -1,4 +1,36 @@
-@model IList<FAQ>
+@using PagedList.Mvc
+@using PagedList;
+@model StaticPagedList<QuestionsViewModel>
+@{
+
+    int index = ((Model.PageNumber - 1) * Model.PageSize) + 1;
+}
+
+@using (Ajax.BeginForm("All",
+        new AjaxOptions
+        {
+            HttpMethod = "GET",
+            UpdateTargetId = "allQuestionsPane"
+        }))
+{
+    <input type="hidden" value="@ViewBag.pageSize" />
+    <div class="form-group" style="max-width:150px;">
+        <label for="exampleSelect">Select Size</label>
+        <select class="form-control" id="exampleSelect" name="pageSize" onchange="$(this).submit()">
+            <option value="">@ViewBag.CurrentPageSize</option>
+            <option value="-1">Show All</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+
+        </select>
+    </div>
+
+}
+
 <table class="table table-striped ">
     <thead>
         <tr>
@@ -14,11 +46,11 @@
         @foreach (var allQuestions in Model)
         {
 
-            <tr id="">
-                <td><b>Sr</b></td>
-                <td><b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = allQuestions.ProductId })">@allQuestions.ProductName </a></b></td>
+            <tr>
+                <td><b>@index</b></td>
+                <td><b><a>@allQuestions.ProductName </a></b></td>
                 <td>@allQuestions.Question</td>
-                <td><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = 5 })">@allQuestions.Answer</a></td>
+                <td><a>@allQuestions.Answer</a></td>
                 <td text-center">@allQuestions.IsAnswered</td>
                 <td><button class="btn btn-danger" data-toggle="modal" data-target="#confirmaDeletionModal">Delete</button></td>
             </tr>
@@ -32,27 +64,38 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                           
-                                @using (Html.BeginForm("DeleteFAQ", "FAQAdmin", FormMethod.Post))
-                                {
-                                    <label class="col-form-label"><h3><b>@allQuestions.Question</b></h3></label>
-                                    <div class="form-group">
-                                        <label for="answerText" class="col-form-label">Are you sure you want to delete the question ?</label>
-                                        <label for="answerText" class="col-form-label"><small>You will not be able to undo this action</small></label>
-                                        <input name="id" value="@allQuestions.Id" hidden/>
-                                    </div>
-                                   
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </div>
-                                }
-                               
-                           
+
+                            @using (Html.BeginForm("DeleteFAQ", "FAQAdmin", FormMethod.Post))
+                            {
+                                <label class="col-form-label"><h3><b>@allQuestions.Question</b></h3></label>
+                                <div class="form-group">
+                                    <label for="answerText" class="col-form-label">Are you sure you want to delete the question ?</label>
+                                    <label for="answerText" class="col-form-label"><small>You will not be able to undo this action</small></label>
+                                    <input name="id" value="@allQuestions.FAQId" hidden />
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </div>
+                            }
+
+
                         </div>
                     </div>
                 </div>
             </div>
+            index++;
         }
     </tbody>
 </table>
+
+<div class="pagination-wrapper">
+
+
+    @Html.PagedListPager(Model,
+    page => Url.Action("All",
+    new { pageNumber = page, pageSize = ViewBag.pageSize }),
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "allQuestionsPane" }))
+
+</div>
