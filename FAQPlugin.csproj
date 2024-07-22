@@ -180,6 +180,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="Views\_EditModal.cshtml" />
     <None Include="Views\_FAQWidget.cshtml" />
     <None Include="Views\Index.cshtml" />
     <Content Include="Resource\create_faq_table.sql" />
@@ -191,6 +192,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <None Include="Views\_AnsweredFAQs.cshtml" />
     <None Include="Views\_AllFAQs.cshtml" />
+    <None Include="Views\_PageSize.cshtml" />
     <None Include="Views\_UnAnsweredFAQs.cshtml" />
   </ItemGroup>
   <ItemGroup>

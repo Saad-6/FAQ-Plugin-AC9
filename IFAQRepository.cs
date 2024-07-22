@@ -12,17 +12,17 @@ namespace FAQPlugin
     {
         IList<FAQ> LoadAllProductQuestions(int productId);
         FAQ LoadQuestionById(int id);
-        IList<FAQ> LoadAllQuestions();
-        IList<FAQ> LoadAllQuestions(int pageSize, int startIndex);
-        IList<FAQ> LoadAllAnsweredQuestions();
-        IList<FAQ> LoadAllAnsweredQuestions(int pageSize, int startIndex);
-        IList<FAQ> LoadUnAnsweredQuestions();
-        IList<FAQ> LoadUnAnsweredQuestions(int pageSize,int startIndex);
+        IList<FAQ> LoadAllQuestions(string sortExpression);
+        IList<FAQ> LoadAllQuestions(int pageSize, int startIndex,string sortExpression);
+        IList<FAQ> LoadAllAnsweredQuestions(string sortExpression);
+        IList<FAQ> LoadAllAnsweredQuestions(int pageSize, int startIndex,string sortExpression);
+        IList<FAQ> LoadUnAnsweredQuestions(string sortExpression);
+        IList<FAQ> LoadUnAnsweredQuestions(int pageSize,int startIndex, string sortExpression);
         IList<FAQ> LoadAnsweredProductQuestions(int productId);
         int GetPendingCount();
         int GetAnsweredCount();
-        IList<FAQ> GetAll();
-        IList<FAQ> GetAll(int pageNumber , int pageSize );
+        IList<FAQ> GetAll(string sortExpression);
+        IList<FAQ> GetAll(int pageNumber , int pageSize,string sortExpression );
         bool Update(FAQ model);
         bool Remove (FAQ model);
 

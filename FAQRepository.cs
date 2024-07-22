@@ -15,6 +15,7 @@ namespace FAQPlugin
             .Add(Restrictions.Eq("Visibility", true));
 
 
+
             return productQuestions.List<FAQ>();
 
         }
@@ -35,71 +36,81 @@ namespace FAQPlugin
                 
             return loadAnsweredProductQuestions.List<FAQ>();
         }
-        public IList<FAQ> LoadAllQuestions()
+        public IList<FAQ> LoadAllQuestions(string sortExpression )
         {
-            var loadAllQuestions = NHibernateHelper.CreateCriteria<FAQ>();
+            var loadAllQuestions = NHibernateHelper.CreateCriteria<FAQ>()
+                .AddOrder(Order.Asc(sortExpression));
            
             return loadAllQuestions.List<FAQ>();    
         } 
-        public IList<FAQ> LoadAllQuestions(int pageSize, int startIndex)
+        public IList<FAQ> LoadAllQuestions(int pageSize, int startIndex, string sortExpression )
         {
 
             var loadAllQuestions = NHibernateHelper.CreateCriteria<FAQ>()
            .SetFirstResult(startIndex)
-           .SetMaxResults(pageSize);
+           .SetMaxResults(pageSize)
+           .AddOrder(Order.Asc(sortExpression));
+
 
             return loadAllQuestions.List<FAQ>();    
         }
-        public IList<FAQ> LoadAllAnsweredQuestions()
+        public IList<FAQ> LoadAllAnsweredQuestions( string sortExpression)
         {
             var loadAllAnsweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
-           .Add(Restrictions.Eq("IsAnswered", true));
+           .Add(Restrictions.Eq("IsAnswered", true))
+           .AddOrder(Order.Asc(sortExpression));
 
             return loadAllAnsweredQuestions.List<FAQ>();
 
         }
-        public IList<FAQ> LoadAllAnsweredQuestions(int pageSize, int startIndex)
+        public IList<FAQ> LoadAllAnsweredQuestions(int pageSize, int startIndex,string sortExpression )
         {
 
             var loadAllAnsweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
            .Add(Restrictions.Eq("IsAnswered", true))
            .SetFirstResult(startIndex)
-           .SetMaxResults(pageSize);
+           .SetMaxResults(pageSize)
+           .AddOrder(Order.Asc(sortExpression));
 
             return loadAllAnsweredQuestions.List<FAQ>();
 
         }
 
-        public IList<FAQ> LoadUnAnsweredQuestions()
+        public IList<FAQ> LoadUnAnsweredQuestions(string sortExpression )
         {
             var loadAllUnansweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
-          .Add(Restrictions.Eq("IsAnswered", false));
+          .Add(Restrictions.Eq("IsAnswered", false))
+          .AddOrder(Order.Asc(sortExpression));
 
             return loadAllUnansweredQuestions.List<FAQ>();
 
         } 
-        public IList<FAQ> LoadUnAnsweredQuestions(int pageSize,int startIndex)
+        public IList<FAQ> LoadUnAnsweredQuestions(int pageSize,int startIndex, string sortExpression )
         {
             var loadAllUnansweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
            .Add(Restrictions.Eq("IsAnswered", false))
            .SetFirstResult(startIndex) 
-           .SetMaxResults(pageSize); 
+           .SetMaxResults(pageSize)
+           .AddOrder(Order.Asc(sortExpression));
 
             return loadAllUnansweredQuestions.List<FAQ>();
 
         }
-        public IList<FAQ> GetAll()
+        public IList<FAQ> GetAll(string sortExpression)
         {
-            var entities = NHibernateHelper.CreateCriteria<FAQ>().List<FAQ>();
+            var entities = NHibernateHelper.CreateCriteria<FAQ>().AddOrder(Order.Asc(sortExpression)).List<FAQ>();
 
             return entities;
             
         }
-        public IList<FAQ> GetAll(int pageSize , int startIndex )
+        public IList<FAQ> GetAll(int pageSize , int startIndex,string sortExpression )
         {
             var entities = NHibernateHelper.CreateCriteria<FAQ>()
             .SetFirstResult(startIndex)
-            .SetMaxResults(pageSize).List<FAQ>();
+            .SetMaxResults(pageSize)
+            .AddOrder(Order.Asc(sortExpression))
+            .List<FAQ>();
+
                
             return entities;
             

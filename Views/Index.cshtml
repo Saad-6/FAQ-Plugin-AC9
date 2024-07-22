@@ -2,7 +2,7 @@
     ViewBag.Title = "Manage FAQs";
     ViewBag.PageCaption = "Frequently Asked Questions";
 }
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight" id="containerId">
     <div class="ibox float-e-margins py-3">
         <div class="ibox-title">
             <h5>Manage FAQs</h5>
@@ -48,29 +48,97 @@
 
 @section Scripts {
     <script>
-        function toggleIcon(data) {
-            console.log("toggle icon triggered");
-            let element = document.getElementById("iconid");
+        $(document).ready(function () {
+            $(document).on("click", ".btn-uninstall", function () {
+                var button = $(this);
+                var id = button.data("id");
+                var question = button.data("question");
+
+                swal({
+                    title: "Are you sure you want to remove '" + question + "'?",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, Remove it!",
+                    closeOnConfirm: true,
+                    html: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        // Set the ID in the hidden input field
+                        $("#deleteId").val(id);
+
+                        // Submit the form via AJAX
+                        $("#deleteForm").submit();
+                    }
+                });
+
+                return false; // Prevent default action
+            });
+
+
+            $(document).on("click", ".open-answer-modal", function () {
+                var question = $(this).data("question");
+                var id = $(this).data("id");
+                $("#modal-question").text("Question: " + question);
+                $("#modal-question-id").val(id);
+            });
+
+            $(document).on("click", ".answer-link", function () {
+                var question = $(this).data("questionupdate");
+                var answer = $(this).data("answerupdate");
+                var id = $(this).data("idupdate");
+                $("#modal-question-update").text("Question: " + question);
+                $("#modal-answer-update").attr("placeholder", answer);
+                $("#modal-question-id-update").val(id);
+            });
+
+            $(document).on("click", ".answer-link-fromAll", function () {
+                var question = $(this).data("questionall");
+                var answer = $(this).data("answerall");
+                var id = $(this).data("idall");
+                $("#modal-question-all").text("Question: " + question);
+                $("#modal-answer-all").attr("placeholder", answer);
+                $("#modal-question-id-all").val(id);
+            });
+
+
+
+        });
+        function toggleIcon(elementId) {
+            console.log("toggle icon triggered for element: " + elementId);
+            let element = document.getElementById(elementId);
             if (element) {
-                let currentClass = element.className;
-                if (currentClass.includes("fa fa-eye")) {
-                    element.classList.remove("fa", "fa-eye");
-                    element.classList.add("fa", "fa-eye-slash");
-                } else if (currentClass.includes("fa fa-eye-slash")) {
-                    element.classList.remove("fa", "fa-eye-slash");
-                    element.classList.add("fa", "fa-eye");
-                }
-                else if (currentClass.includes("fa-eye-slash fa")) {
-                    element.classList.remove("fa-eye-slash", "fa");
-                    element.classList.add("fa", "fa-eye");
-                }
-                else if (currentClass.includes("fa-eye fa")) {
-                    element.classList.remove("fa-eye", "fa");
-                    element.classList.add("fa", "fa-eye-slash");
+                if (element.classList.contains("fa-eye")) {
+                    console.log("Contains fa-eye");
+                    element.classList.remove("fa-eye");
+                    console.log("Supposedly removed fa-eye");
+                    element.classList.add("fa-eye-slash");
+                    console.log("Supposedly added fa-eye-slash");
+                } else if (element.classList.contains("fa-eye-slash")) {
+                    console.log("Contains fa-eye-slash");
+                    element.classList.remove("fa-eye-slash");
+                    console.log("Supposedly removed fa-eye-slash");
+                    element.classList.add("fa-eye");
+                    console.log("Supposedly added fa-eye");
                 }
             } else {
-                console.error(`Element with ID "iconid" not found.`);
+                console.error("Element not found.");
             }
         }
+
+
+        function AnswerSubmitted() {
+            $('#AnswerModal').modal('hide');
+            toastr.success('Answer saved successfully!');
+        }
+        function AnswerUpdated() {
+            $('#editAnswerModal').modal('hide');
+            $('#editAnswerModalFromAll').modal('hide');
+
+            toastr.success('Answer updated successfully!');
+        }
+        function Deleted() {
+            toastr.success('Question Deleted successfully!');
+        }
+
     </script>
 }
