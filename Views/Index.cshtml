@@ -11,7 +11,7 @@
             <div id="tabs" class="tabs product-tabs">
                 <ul class="nav nav-tabs" role="tablist">
                     <li id="answerQuestionsTab" class="active">
-                        <a href="#unanswerQuestionsPane" role="tab" data-toggle="tab" aria-controls="answer-questions" aria-expanded="true">UnAnswered Questions</a>
+                        <a href="#unanswerQuestionsPane" role="tab" data-toggle="tab" aria-controls="answer-questions" aria-expanded="true">Unanswered Questions</a>
                     </li>
                     <li id="answeredQuestionsTab">
                         <a href="#answeredQuestionsPane" role="tab" data-toggle="tab" aria-controls="answered-questions" aria-expanded="false">Answered Questions</a>
@@ -24,19 +24,20 @@
 
                     <div role="tabpanel" class="tab-pane active in" id="unanswerQuestionsPane">
 
-                        @Html.Action("Unanswered", "FAQAdmin")
+                        @Html.Action("DisplayTabs", "FAQAdmin", new { view = "_UnAnsweredFAQs" })
+
 
                     </div>
 
                     <div role="tabpanel" class="tab-pane" id="answeredQuestionsPane">
 
-                        @Html.Action("Answered", "FAQAdmin")
+                        @Html.Action("DisplayTabs", "FAQAdmin", new { view = "_AnsweredFAQs" })
 
                     </div>
 
                     <div role="tabpanel" class="tab-pane" id="allQuestionsPane">
 
-                        @Html.Action("All", "FAQAdmin")
+                        @Html.Action("DisplayTabs", "FAQAdmin", new { view = "_AllFAQs" })
 
                     </div>
                 </div>
@@ -55,10 +56,10 @@
                 var question = button.data("question");
 
                 swal({
-                    title: "Are you sure you want to remove '" + question + "'?",
+                    title: "Are you sure you want to delete the question ?",
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, Remove it!",
+                    confirmButtonText: "Yes, Delete it!",
                     closeOnConfirm: true,
                     html: true
                 }, function (isConfirm) {

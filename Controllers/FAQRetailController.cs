@@ -4,7 +4,9 @@ namespace FAQPlugin.Controllers
     using CommerceBuilder.Common;
     using CommerceBuilder.Products;
     using CommerceBuilder.Web.Mvc;
+    using global::FAQPlugin.Models;
     using System;
+    using System.Collections.Generic;
     using System.Web.Mvc;
     using RegisterWidget = CommerceBuilder.Web.RegisterWidget;
     using WidgetCategory = CommerceBuilder.CMS.WidgetCategory;
@@ -22,30 +24,44 @@ namespace FAQPlugin.Controllers
         }
 
         [RegisterWidget(DisplayName = "Frequently Asked Questions", Category = WidgetCategory.Product, Description = "Displays the most frequently asked questions related with the product.")]
-        public ActionResult FAQWidget(Models.FAQModelParams parameters)
+        public ActionResult FAQWidget(FAQParams parameters)
         {
-
-            if (parameters.ProductId == 0) { 
-            
-                parameters.ProductId  = PageHelper.GetProductId();
+            IList<FAQ>questions = new List<FAQ>();
+            Product product = new Product(); 
+            parameters.ProductId  = PageHelper.GetProductId();
+           
+            if (parameters.ProductId == 0)
+            {
+                // if product id is zero , widget was placed at a non product page so we should show all questions
+                questions = _faqRepository.LoadQuestions();
             }
-            var product = _productRepo.Load(parameters.ProductId);
-            var questions = _faqRepository.LoadAnsweredProductQuestions(parameters.ProductId);
-            parameters.fAQs = questions;
-            if (product == null) {
-                
-            return HttpNotFound();
-            
-            }
+            else
+            {
+             product = _productRepo.Load(parameters.ProductId);
+             questions = _faqRepository.LoadProductQuestions(parameters.ProductId, QuestionType.Answered, ((int)parameters.NoOfFaqs));
 
-            return PartialView("~/Plugins/FAQPlugin/Views/_FAQWidget.cshtml",parameters);
+            }
+            IList<QuestionsViewModel> questionsList = new List<QuestionsViewModel>();
+            foreach (var faq in questions)
+            {
+                var model = new QuestionsViewModel();
+                model.FAQId = faq.Id;
+                model.Question = faq.Question;
+                model.Answer = faq.Answer;
+                model.ProductName = faq.Product.Name;
+                model.Visibility = faq.Visibility;
+                model.IsAnswered = faq.IsAnswered;
+                model.ProductId = faq.Product.Id;
+                questionsList.Add(model);
+            }
+            ViewBag.ProductId=parameters.ProductId;
+
+            return PartialView("~/Plugins/FAQPlugin/Views/_FAQWidget.cshtml",questionsList);
         }
         public ActionResult SubmitQuestion(string question , int productId)
         {
             int userId = AbleContext.Current.UserId;
-           
             var createdDate = DateTime.Now;
-
             var product = _productRepo.Load(productId);
 
             if (question == "") {

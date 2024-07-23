@@ -2,14 +2,18 @@
 @using PagedList.Mvc
 @using PagedList;
 @model StaticPagedList<QuestionsViewModel>
-
-@using (Ajax.BeginForm("All",
+@{
+    string view = "_AllFAQs";
+}
+@using (Ajax.BeginForm("DisplayTabs",
         new AjaxOptions
         {
             HttpMethod = "GET",
             UpdateTargetId = "allQuestionsPane"
         }))
 {
+    <input type="hidden" name="view" value="@view" />
+    <input type="hidden" name="pageNumber" value="@ViewBag.PageNumber" />
     @Html.Partial("~/Plugins/FAQPlugin/Views/_PageSize.cshtml")
 
 }
@@ -25,8 +29,9 @@
 {
     @Html.AntiForgeryToken()
     <input type="hidden" name="id" id="deleteId" />
-    <input  type="hidden" name="pageSize" value="@ViewBag.PageSize"/>
-    <input  type="hidden" name="pageNumber" value="@ViewBag.PageNumber" />
+    <input type="hidden" name="pageSize" value="@ViewBag.PageSize" />
+    <input type="hidden" name="pageNumber" value="@ViewBag.PageNumber" />
+    <input type="hidden" name="view" value="@view" />
 }
 
 <table class="table table-striped">
@@ -42,13 +47,16 @@
         @foreach (var allQuestions in Model)
         {
             <tr>
-               <td><b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = allQuestions.ProductId })">@allQuestions.ProductName</a></b></td>
+                <td><b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = allQuestions.ProductId })">@allQuestions.ProductName</a></b></td>
                 <td>@allQuestions.Question</td>
                 <td>
                     @if (string.IsNullOrEmpty(allQuestions.Answer))
                     {
                         <a class="text-danger">
+                            <i>
                             Pending
+
+                            </i>
                         </a>
                     }
                     else
@@ -76,7 +84,7 @@
         <div class="modal-content animated fadeIn">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Answer Question</h4>
+                <h4 class="modal-title">Update Answer</h4>
                 <p>.</p>
             </div>
             <div class="modal-body">
@@ -93,11 +101,11 @@
                         <label for="answerText" class="col-form-label" id="modal-answer-all">Answer:</label>
                         <textarea required class="form-control" name="answer" id="answerText" rows="5"></textarea>
                         <input type="number" hidden name="id" id="modal-question-id-all">
-                        <input name="view" value="all" hidden />
+                        <input name="view" value="@view" hidden />
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" onclick="$('#editAnswerModalFromAll').modal('hide');" class="btn btn-primary">Update changes</button>
+                        <button type="submit" onclick="$('#editAnswerModalFromAll').modal('hide');" class="btn btn-primary">Update</button>
                     </div>
                 }
             </div>
@@ -107,8 +115,8 @@
 
 <div class="pagination-wrapper">
     @Html.PagedListPager(Model,
-    page => Url.Action("All",
-    new { pageNumber = page, pageSize = ViewBag.pageSize }),
+    page => Url.Action("DisplayTabs",
+    new { view = view, pageNumber = page, pageSize = ViewBag.pageSize }),
     PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "allQuestionsPane" }))
 </div>
 

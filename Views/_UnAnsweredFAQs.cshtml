@@ -1,86 +1,89 @@
 
-    @using PagedList.Mvc
-    @using PagedList;
-    @model StaticPagedList<QuestionsViewModel>
-    @{
-        RequireScript(Url.Action("~/Plugins/FAQPlugin/Resource/notification.js"));
-    }
+@using PagedList.Mvc
+@using PagedList;
+@model StaticPagedList<QuestionsViewModel>
+@{
+    string view = "_UnAnsweredFAQs";
+}
 
-    @using (Ajax.BeginForm("Unanswered",
-            new AjaxOptions
-            {
-                HttpMethod = "GET",
-                UpdateTargetId = "unanswerQuestionsPane"
-            }))
-    {
-        @Html.Partial("~/Plugins/FAQPlugin/Views/_PageSize.cshtml")
-    }
+@using (Ajax.BeginForm("DisplayTabs",
+        new AjaxOptions
+        {
+            HttpMethod = "GET",
+            UpdateTargetId = "unanswerQuestionsPane"
+        }))
+{
+    <input type="hidden" name="view" value="@view" />
+    <input type="hidden" name="pageNumber" value="@ViewBag.PageNumber" />
 
-    <table class="table table-striped ">
-        <thead>
+    @Html.Partial("~/Plugins/FAQPlugin/Views/_PageSize.cshtml")
+}
+
+<table class="table table-striped ">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Question</th>
+            <th>Answer</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var unAnsweredQuestions in Model)
+        {
             <tr>
-                <th>Product Name</th>
-                <th>Question</th>
-                <th>Answer</th>
+                <td><b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = unAnsweredQuestions.ProductId })">@unAnsweredQuestions.ProductName</a></b></td>
+                <td>@unAnsweredQuestions.Question</td>
+                <td>
+                    <button class="btn btn-primary open-answer-modal" data-toggle="modal" data-target="#AnswerModal" data-question="@unAnsweredQuestions.Question" data-id="@unAnsweredQuestions.FAQId">Give Answer</button>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var unAnsweredQuestions in Model)
-            {
-                <tr>
-                    <td><b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = unAnsweredQuestions.ProductId })">@unAnsweredQuestions.ProductName</a></b></td>
-                    <td>@unAnsweredQuestions.Question</td>
-                    <td>
-                        <button class="btn btn-primary open-answer-modal" data-toggle="modal" data-target="#AnswerModal" data-question="@unAnsweredQuestions.Question" data-id="@unAnsweredQuestions.FAQId">Give Answer</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
 
-    <!-- Answer Modal -->
-    <div class="modal inmodal" id="AnswerModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated fadeIn">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Answer Question</h4>
-                    <p>.</p>
-                </div>
-                <div class="modal-body">
-                    @using (Ajax.BeginForm("UpdateAnswer",
-                    new AjaxOptions
-                    {
-                        HttpMethod = "POST",
-                        UpdateTargetId = "unanswerQuestionsPane",
-                        OnSuccess="AnswerSubmitted"
-                    }))
-                    {
-                        <label class="col-form-label"><h3><b id="modal-question">Question: </b></h3></label>
-                        <div class="form-group">
-                            <label for="answerText" class="col-form-label"><h4>Answer : </h4></label>
-                            <textarea required class="form-control" placeholder="Your answer ..." name="answer" id="answerText" rows="5"></textarea>
-                            <input type="hidden" name="id" id="modal-question-id">
-                            <input name="view" value="unanswered" hidden />
-                            <input type="hidden" name="pageSize" value="@ViewBag.PageSize" />
-                            <input type="hidden" name="pageNumber" value="@ViewBag.PageNumber" />
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" onclick="$('#AnswerModal').modal('hide');" class="btn btn-primary">Save changes</button>
-                        </div>
-                    }
-                </div>
+<!-- Answer Modal -->
+<div class="modal inmodal" id="AnswerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Answer Question</h4>
+                <p>.</p>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("UpdateAnswer",
+                new AjaxOptions
+                {
+                    HttpMethod = "POST",
+                    UpdateTargetId = "unanswerQuestionsPane",
+                    OnSuccess = "AnswerSubmitted"
+                }))
+                {
+                    <label class="col-form-label"><h3><b id="modal-question">Question: </b></h3></label>
+                    <div class="form-group">
+                        <label for="answerText" class="col-form-label"><h4>Answer : </h4></label>
+                        <textarea required class="form-control" placeholder="Your answer ..." name="answer" id="answerText" rows="5"></textarea>
+                        <input type="hidden" name="id" id="modal-question-id">
+                        <input name="view" value="@view" hidden />
+                        <input type="hidden" name="pageSize" value="@ViewBag.PageSize" />
+                        <input type="hidden" name="pageNumber" value="@ViewBag.PageNumber" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" onclick="$('#AnswerModal').modal('hide');" class="btn btn-primary">Save Answer</button>
+                    </div>
+                }
             </div>
         </div>
     </div>
+</div>
 
-    <div class="pagination-wrapper">
-        @Html.PagedListPager(Model,
-                page => Url.Action("Unanswered",
-                new { pageNumber = page, pageSize = ViewBag.pageSize }),
-                PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "unanswerQuestionsPane" }))
-    </div>
+<div class="pagination-wrapper">
+    @Html.PagedListPager(Model,
+                 page => Url.Action("DisplayTabs",
+                 new { view = view, pageNumber = page, pageSize = ViewBag.pageSize }),
+                 PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "unanswerQuestionsPane" }))
+</div>
 
 
 

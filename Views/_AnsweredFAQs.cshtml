@@ -2,14 +2,19 @@
 @using PagedList.Mvc
 @using PagedList;
 @model StaticPagedList<QuestionsViewModel>
+@{ 
+    string view = "_AnsweredFAQs";
 
-@using (Ajax.BeginForm("Answered",
+}
+@using (Ajax.BeginForm("DisplayTabs",
         new AjaxOptions
         {
             HttpMethod = "GET",
             UpdateTargetId = "answeredQuestionsPane"
         }))
 {
+    <input type="hidden" name="view" value="@view"  />
+    <input type="hidden" name="pageNumber" value="@ViewBag.PageNumber"  />
     @Html.Partial("~/Plugins/FAQPlugin/Views/_PageSize.cshtml")
 
 }
@@ -53,7 +58,7 @@
         <div class="modal-content animated fadeIn">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Answer Question</h4>
+                <h4 class="modal-title">Update Answer</h4>
                 <p>.</p>
             </div>
             <div class="modal-body">
@@ -72,11 +77,11 @@
                         <input type="hidden" name="pageSize" value="@ViewBag.PageSize" />
                         <input type="hidden" name="pageNumber" value="@ViewBag.PageNumber" />
                         <input type="number" hidden name="id" id="modal-question-id-update">
-                        <input name="view" value="answered" hidden />
+                        <input name="view" value="@view" hidden />
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" onclick="$('#editAnswerModal').modal('hide');" class="btn btn-primary">Update changes</button>
+                        <button type="submit" onclick="$('#editAnswerModal').modal('hide');" class="btn btn-primary">Update</button>
                     </div>
                 }
             </div>
@@ -86,8 +91,8 @@
 
 <div class="pagination-wrapper">
     @Html.PagedListPager(Model,
-    page => Url.Action("Answered",
-    new { pageNumber = page, pageSize = ViewBag.pageSize }),
+    page => Url.Action("DisplayTabs",
+    new {view=view, pageNumber = page, pageSize = ViewBag.pageSize }),
     PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "answeredQuestionsPane" }))
 </div>
 

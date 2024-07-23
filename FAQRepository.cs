@@ -1,4 +1,5 @@
 ﻿using CommerceBuilder.DomainModel;
+using FAQPlugin.Models;
 using NHibernate.Criterion;
 using System.Collections.Generic;
 
@@ -8,152 +9,60 @@ namespace FAQPlugin
     [RegisterFor(typeof(IFAQRepository))]
     public class FAQRepository : Repository<FAQ>, IFAQRepository
     {
-        public IList<FAQ> LoadAllProductQuestions(int productId) {
-
-            var productQuestions = NHibernateHelper.CreateCriteria<FAQ>()
-            .Add(Restrictions.Eq("ProductId", productId))
-            .Add(Restrictions.Eq("Visibility", true));
-
-
-
-            return productQuestions.List<FAQ>();
-
+        public IList<FAQ> LoadProductQuestions(int productId, QuestionType questionType = QuestionType.All, int pageSize = 0)
+        {
+            SortExpression sortExpression = SortExpression.Question;
+            return LoadQuestions(questionType, pageSize, 0, sortExpression, productId);
         }
-        public FAQ LoadQuestionById(int id)
+        public IList<FAQ> LoadQuestions(QuestionType questionType = QuestionType.All, int pageSize = 0, int startIndex = 0, SortExpression sortExpression = SortExpression.Question, int productId = 0)
         {
-            var criteria = NHibernateHelper.CreateCriteria<FAQ>()
-            .Add(Restrictions.Eq("Id", id));
+            var questions = NHibernateHelper.CreateCriteria<FAQ>().AddOrder(Order.Asc(sortExpression.ToString()));
 
-            return criteria.UniqueResult<FAQ>();
-        }
-        public IList<FAQ> LoadAnsweredProductQuestions(int productId)
-        {
-                 var loadAnsweredProductQuestions = NHibernateHelper.CreateCriteria<FAQ>()
-                .CreateAlias("Product", "product") 
-                .Add(Restrictions.Eq("product.Id", productId)) 
-                .Add(Restrictions.Eq("IsAnswered", true))
-                .Add(Restrictions.Eq("Visibility", true));
-                
-            return loadAnsweredProductQuestions.List<FAQ>();
-        }
-        public IList<FAQ> LoadAllQuestions(string sortExpression )
-        {
-            var loadAllQuestions = NHibernateHelper.CreateCriteria<FAQ>()
-                .AddOrder(Order.Asc(sortExpression));
-           
-            return loadAllQuestions.List<FAQ>();    
-        } 
-        public IList<FAQ> LoadAllQuestions(int pageSize, int startIndex, string sortExpression )
-        {
-
-            var loadAllQuestions = NHibernateHelper.CreateCriteria<FAQ>()
-           .SetFirstResult(startIndex)
-           .SetMaxResults(pageSize)
-           .AddOrder(Order.Asc(sortExpression));
-
-
-            return loadAllQuestions.List<FAQ>();    
-        }
-        public IList<FAQ> LoadAllAnsweredQuestions( string sortExpression)
-        {
-            var loadAllAnsweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
-           .Add(Restrictions.Eq("IsAnswered", true))
-           .AddOrder(Order.Asc(sortExpression));
-
-            return loadAllAnsweredQuestions.List<FAQ>();
-
-        }
-        public IList<FAQ> LoadAllAnsweredQuestions(int pageSize, int startIndex,string sortExpression )
-        {
-
-            var loadAllAnsweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
-           .Add(Restrictions.Eq("IsAnswered", true))
-           .SetFirstResult(startIndex)
-           .SetMaxResults(pageSize)
-           .AddOrder(Order.Asc(sortExpression));
-
-            return loadAllAnsweredQuestions.List<FAQ>();
-
-        }
-
-        public IList<FAQ> LoadUnAnsweredQuestions(string sortExpression )
-        {
-            var loadAllUnansweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
-          .Add(Restrictions.Eq("IsAnswered", false))
-          .AddOrder(Order.Asc(sortExpression));
-
-            return loadAllUnansweredQuestions.List<FAQ>();
-
-        } 
-        public IList<FAQ> LoadUnAnsweredQuestions(int pageSize,int startIndex, string sortExpression )
-        {
-            var loadAllUnansweredQuestions = NHibernateHelper.CreateCriteria<FAQ>()
-           .Add(Restrictions.Eq("IsAnswered", false))
-           .SetFirstResult(startIndex) 
-           .SetMaxResults(pageSize)
-           .AddOrder(Order.Asc(sortExpression));
-
-            return loadAllUnansweredQuestions.List<FAQ>();
-
-        }
-        public IList<FAQ> GetAll(string sortExpression)
-        {
-            var entities = NHibernateHelper.CreateCriteria<FAQ>().AddOrder(Order.Asc(sortExpression)).List<FAQ>();
-
-            return entities;
-            
-        }
-        public IList<FAQ> GetAll(int pageSize , int startIndex,string sortExpression )
-        {
-            var entities = NHibernateHelper.CreateCriteria<FAQ>()
-            .SetFirstResult(startIndex)
-            .SetMaxResults(pageSize)
-            .AddOrder(Order.Asc(sortExpression))
-            .List<FAQ>();
-
-               
-            return entities;
-            
-        }
-
-        public int GetAnsweredCount()
-        {
-           
-          return NHibernateHelper.CreateCriteria<FAQ>()
-                .Add(Restrictions.Eq("IsAnswered", true))
-                .SetProjection(Projections.RowCount())
-                .UniqueResult<int>();
-        }
-
-        public int GetPendingCount()
-        {
-          return NHibernateHelper.CreateCriteria<FAQ>()
-                .Add(Restrictions.Eq("IsAnswered", false))
-                .SetProjection(Projections.RowCount())
-                .UniqueResult<int>();
-        }
-
-        public bool Remove(FAQ model)
-        {
-            if(model == null)
+            if (productId != 0)
             {
-                return false;
-            }
-            Delete(model);
-
-            return true;
-            
-        }
-
-        public bool Update(FAQ model)
-        {
-            if(model == null)
-            {
-                return false;
+                questions.
+                CreateAlias("Product", "product")
+               .Add(Restrictions.Eq("product.Id", productId))
+               .Add(Restrictions.Eq("Visibility", true));
             }
 
-            Save(model);
-            return true;
+            if (questionType == QuestionType.Unanswered)
+            {
+                questions.Add(Restrictions.Eq("IsAnswered", false));
+            } 
+            else if (questionType == QuestionType.Answered)
+            {
+                questions.Add(Restrictions.Eq("IsAnswered", true));
+            }
+
+            if (pageSize != 0)
+            {
+                questions
+               .SetMaxResults(pageSize);
+            }
+            if (startIndex != 0)
+            {
+                questions
+               .SetFirstResult(startIndex);
+            }
+            return questions.List<FAQ>();
+        }
+        public int GetCount(QuestionType questionType = QuestionType.All)
+        {
+            var count = NHibernateHelper.CreateCriteria<FAQ>().SetProjection(Projections.RowCount());
+     
+            if (questionType == QuestionType.Answered)
+            {
+                 count
+                .Add(Restrictions.Eq("IsAnswered", true));
+            }
+            if (questionType == QuestionType.Unanswered)
+            {
+                count
+               .Add(Restrictions.Eq("IsAnswered", false));
+            }
+            return count
+                  .UniqueResult<int>();
         }
     }
 }
