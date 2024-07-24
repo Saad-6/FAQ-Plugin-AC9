@@ -14,7 +14,7 @@ Admin user can choose between displaying an answered question by toggling the vi
 * Visibility Toggle: Admins can toggle the visibility of answered questions.
 * Pagination: Supports pagination for better management of FAQs.
 * Sorting: Allows sorting of questions based on different criteria.
-* 
+  
 ## Installation
 1. Download: Download the zip file from the build folder.
 2. Paste: Paste the zip file into the Ablecommerce/Website/Plugins directory.
@@ -22,7 +22,7 @@ Admin user can choose between displaying an answered question by toggling the vi
 
 ## Usage Guide
 
-# Admin Panel
+### Admin Panel
 1. Navigate to FAQs: Go to the Third Party Tab in the admin dashboard to access the FAQ management interface.
 2. View Questions:
    * Unanswered Questions: View all questions that have not been answered yet.
@@ -31,7 +31,7 @@ Admin user can choose between displaying an answered question by toggling the vi
 3. Manage Questions:
    * Answer Questions: Provide answers to the questions.
    * Toggle Visibility: Toggle the visibility of answered questions to either show or hide them from the front end.
-# Retail Page
+### Retail Page
 1. FAQ Widget:
    * Display Questions: The widget displays FAQs related to the product in the current context.
    * Ask a Question: Users can submit their questions through the widget. The questions will then appear in the admin dashboard for review and answering.
