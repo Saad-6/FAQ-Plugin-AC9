@@ -8,7 +8,9 @@ Admin can navigate between unanswered questions / answered questions or both and
 Admin user can choose between displaying an answered question by toggling the visibilty icon.
 
 ## Installation
-Download the zip file from the build folder and paste it in the ablecommerce/website/plugin folder and rebuild  the app
+Download the zip file from the build folder and paste it in the ablecommerce/website/plugin folder and rebuild  the app, after
+which the plugin should be available under the general section.
+
 
 
 
