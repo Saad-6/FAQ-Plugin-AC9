@@ -1,12 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿@model AskQuestionModel
 
-namespace FAQPlugin.Views
-{
-    internal class _AskQuestion
-    {
-    }
-}
+<div class="modal inmodal" id="askQuestionModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"> </h4>
+                <p>.</p>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("SubmitQuestion",
+                new AjaxOptions
+                {
+                    HttpMethod = "POST",
+                    OnSuccess = "$('#askQuestionModal').modal('hide'); $('#successMessage').show();",
+                    OnFailure = "toastr.error('Input Field cannot be empty');"
+                }))
+                {
+                    <label class="col-form-label"><h3><b id="modal-question">Ask a Question: </b></h3></label>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Question, "Question:")
+                        @Html.TextAreaFor(m => m.Question, new { @class = "form-control", placeholder = "Your question here ..." })
+                        @Html.ValidationMessageFor(m => m.Question)
+                        @Html.HiddenFor(m => m.ProductId)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Ask Question</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

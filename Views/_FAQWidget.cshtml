@@ -1,18 +1,28 @@
-@model IList<QuestionsViewModel>
+@model RetailViewModel
 @{
-    RequireScript(Url.Content("~/Resource/notification.js"));
+    RequireScript(Url.Content("~/Plugins/FAQPlugin/Resource/notification.js"));
 }
+@{
+    int prodId = Model.AskQuestionModel.ProductId;
+
+  
+}
+<div style="display:flex;justify-content:space-around;align-content:center;align-items:center;">
+        <div id="successMessage"style="display:none;max-width:200px;margin:20px;" class="alert alert-success text-center">Question submitted successfully!</div>
+
+    </div>
 <div id="tabs" class="tabs product-tabs" style="margin:20px;padding-bottom:60px">
     <div class="" style="cursor:pointer;background-color:white;min-height:60px;display:flex;justify-content:space-between;align-items:center;">
         <h3 class="my-0" data-toggle="collapse" style="margin-left:15px;" href="#tab-con">Frequently Asked Questions</h3>
+      
         <button type="button" class="btn btn-primary my-0" data-toggle="modal" style="margin-right:15px;" data-target="#askQuestionModal">Ask a Question</button>
     </div>
     <div id="tab-con" class="tab-content collapse">
         <div class="ibox-content">
             <div id="accordion" role="tablist" aria-multiselectable="true">
-                @foreach (var faq in Model)
+                @foreach (var faq in Model.QuestionsList)
                 {
-                    var faqId = $"faq-{faq.FAQId}"; // Unique ID for each FAQ
+                    var faqId = $"faq-{faq.FAQId}"; 
 
                     <div class="card mb-4">
                         <div class="card-header" role="tab" id="heading-@faqId" style="padding: 20px;">
@@ -40,115 +50,6 @@
     </div>
 </div>
 
-<!--
-  Current Modal
-<div class="modal inmodal fade" id="askQuestionModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content animated fadeIn">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Ask a Question</h4>
-            </div>
-            using (Ajax.BeginForm("SubmitQuestion", null, new AjaxOptions() { OnSuccess = "$('#askQuestionModal').modal('hide');", OnFailure = "toastr.error('Input Field cannot be empty');" }, new { id = "ask-question-form", class = "form" }))
-            {
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="question">Your Question</label>
-                        <input name="question" required class="form-control" placeholder="Type your question here" />
-                        <input name="productId" type="hidden" value="ViewBag.ProductId" />
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" id="submit-question">Submit Question</button>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-</div>
--->
-
-<!-- Question Modal -->
-<div class="modal inmodal" id="askQuestionModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content animated fadeIn">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Answer Question</h4>
-                <p>.</p>
-            </div>
-            <div class="modal-body">
-                @using (Ajax.BeginForm("SubmitQuestion",
-                new AjaxOptions
-                {
-                    HttpMethod = "POST",
-                    OnSuccess = "$('#askQuestionModal').modal('hide');",
-                    OnFailure = "toastr.error('Input Field cannot be empty');"
-                }))
-                {
-                    <label class="col-form-label"><h3><b id="modal-question">Ask a Question: </b></h3></label>
-                    <div class="form-group">
-                        <label for="answerText" class="col-form-label"><h4>Question : </h4></label>
-                        <textarea required class="form-control" placeholder="Your question here ..." name="question" id="answerText" rows="5"></textarea>
-                        <input name="productId" type="hidden" value="@ViewBag.ProductId" />            
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" onclick="$('#askQuestionModal').modal('hide');" class="btn btn-primary">Ask Question</button>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--
-    New Approach
-<div class="m-t">
-    <h2>FAQs</h2>
-    <div class="row grid" id="categories">
-
-
-        <article class=" p-t-md">
-            <div class="" style="cursor:pointer;background-color:white;min-height:60px;display:flex;justify-content:space-between;align-items:center;">
-                <h3 class="my-0" data-toggle="collapse" style="margin-left:15px;" href="#tab-con">Frequently Asked Questions</h3>
-                <button type="button" class="btn btn-primary my-0" data-toggle="modal" style="margin-right:15px;" data-target="#askQuestionModal">Ask a Question</button>
-            </div>
-            <div class="ibox-content">
-                <div id="accordion" role="tablist" aria-multiselectable="true">
-                   foreach (var faq in Model)
-                    {
-                        var faqId = $"faq-{faq.FAQId}"; // Unique ID for each FAQ
-
-                        <div class="card mb-4">
-                            <div class="card-header" role="tab" id="heading-faqId" style="padding: 20px;">
-                                <h4 class="mb-0">
-                                    <a class="collapsed" data-toggle="collapse" href="#collapse-faqId" aria-expanded="false" aria-controls="collapse-faqId">
-                                        faq.Question <i class="fa fa-arrow-down"></i>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapse-faqId" class="collapse" role="tabpanel" aria-labelledby="heading-faqId" data-parent="#accordion">
-                                <div class="card-body" style="padding: 20px;">
-                                    <h5>
-                                        <i>
-                                            faq.Answer
-                                        </i>
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    <div class="pull-right mx-3"></div>
-                </div>
-                <div class="sticky-footer"></div>
-            </div>
-
-        </article>
-
-
-
-    </div>
-</div>
--->
+@Html.Partial("~/Plugins/FAQPlugin/Views/_AskQuestion.cshtml", Model.AskQuestionModel)
+            

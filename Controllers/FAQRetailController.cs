@@ -15,12 +15,10 @@ namespace FAQPlugin.Controllers
     {
         private readonly IProductRepository _productRepo;
         private readonly IFAQRepository _faqRepository;
-        private readonly MyNHibernateHelper _NHibernateHelper;
         public FAQRetailController(IProductRepository productRepo, IFAQRepository faqRepository)
         {
             _productRepo = productRepo;
             _faqRepository = faqRepository;
-            _NHibernateHelper = new MyNHibernateHelper();
         }
 
         [RegisterWidget(DisplayName = "Frequently Asked Questions", Category = WidgetCategory.Product, Description = "Displays the most frequently asked questions related with the product.")]
@@ -42,6 +40,8 @@ namespace FAQPlugin.Controllers
 
             }
             IList<QuestionsViewModel> questionsList = new List<QuestionsViewModel>();
+            AskQuestionModel askQuestionModel = new AskQuestionModel();
+            askQuestionModel.ProductId = parameters.ProductId;
             foreach (var faq in questions)
             {
                 var model = new QuestionsViewModel();
@@ -55,39 +55,36 @@ namespace FAQPlugin.Controllers
                 questionsList.Add(model);
             }
             ViewBag.ProductId=parameters.ProductId;
-
-            return PartialView("~/Plugins/FAQPlugin/Views/_FAQWidget.cshtml",questionsList);
+            RetailViewModel viewModel = new RetailViewModel();
+            viewModel.QuestionsList = questionsList;
+            viewModel.AskQuestionModel = askQuestionModel;
+            
+            return PartialView("~/Plugins/FAQPlugin/Views/_FAQWidget.cshtml", viewModel);
         }
-        public ActionResult SubmitQuestion(string question , int productId)
+        public ActionResult SubmitQuestion(AskQuestionModel model)
         {
-            int userId = AbleContext.Current.UserId;
-            var createdDate = DateTime.Now;
-            var product = _productRepo.Load(productId);
-
-            if (question == "") {
+            if (!ModelState.IsValid) {
                 Response.StatusCode = 400;
-                
                 return Json(new { success = false, message = "Input Field Cannot be Empty" });
             }
-
-            if (ModelState.IsValid && productId != 0) {
+            int userId = AbleContext.Current.UserId;
+            var createdDate = DateTime.Now;
+            var product = _productRepo.Load(model.ProductId);
                 var faq = new FAQ()
                 {
-                    Question = question,
+                    Question = model.Question,
                     Product = product,
                     UserId = userId,
                     CreatedDate = createdDate,
                     IsAnswered = false,
                     Visibility = true,
                 };
-         
-
               _faqRepository.Save(faq);
-
+              TempData["SuccessMessage"] = "Question submitted successfully!";
+            
             return Json(new { success = true, message = "Question submitted successfully!" });
 
-            }
-            return Json(new { success = false, message = "An Error Occured" });
+          
         }
         
        

@@ -25,7 +25,6 @@ public class FAQAdminController : AbleAdminController
         int count;
         int pageIndex = pageNumber - 1;
         int startIndex = (pageSize * pageIndex);
-        ViewName View;
         QuestionType questionType = QuestionType.All;
         IList<FAQ>questions = new List<FAQ>();
         IList<QuestionsViewModel> questionsList = new List<QuestionsViewModel>();
