@@ -1,55 +1,107 @@
-@model RetailViewModel
-@{
-    RequireScript(Url.Content("~/Plugins/FAQPlugin/Resource/notification.js"));
-}
-@{
-    int prodId = Model.AskQuestionModel.ProductId;
+<div id="faq-widget-container">
+    @model RetailViewModel
+    @using PagedList.Mvc
+    @{
+        RequireScript(Url.Content("~/Plugins/FAQPlugin/Content/index.js"));
+    }
+    @{
+        int prodId = Model.AskQuestionModel.ProductId;
 
-  
-}
-<div style="display:flex;justify-content:space-around;align-content:center;align-items:center;">
-        <div id="successMessage"style="display:none;max-width:200px;margin:20px;" class="alert alert-success text-center">Question submitted successfully!</div>
 
-    </div>
-<div id="tabs" class="tabs product-tabs" style="margin:20px;padding-bottom:60px">
-    <div class="" style="cursor:pointer;background-color:white;min-height:60px;display:flex;justify-content:space-between;align-items:center;">
-        <h3 class="my-0" data-toggle="collapse" style="margin-left:15px;" href="#tab-con">Frequently Asked Questions</h3>
-      
-        <button type="button" class="btn btn-primary my-0" data-toggle="modal" style="margin-right:15px;" data-target="#askQuestionModal">Ask a Question</button>
-    </div>
-    <div id="tab-con" class="tab-content collapse">
-        <div class="ibox-content">
-            <div id="accordion" role="tablist" aria-multiselectable="true">
-                @foreach (var faq in Model.QuestionsList)
-                {
-                    var faqId = $"faq-{faq.FAQId}"; 
+    }
+    <link rel="stylesheet" href="~/Plugins/FAQPlugin/Content/styles.css" />
+    @*<div class="flex justify-space-around align-center">
+        <div id="success-message" class="alert alert-success text-center">Question submitted successfully!</div>
 
-                    <div class="card mb-4">
-                        <div class="card-header" role="tab" id="heading-@faqId" style="padding: 20px;">
-                            <h4 class="mb-0">
-                                <a class="collapsed" data-toggle="collapse" href="#collapse-@faqId" aria-expanded="false" aria-controls="collapse-@faqId">
-                                    @faq.Question <i class="fa fa-arrow-down"></i>
-                                </a>
-                            </h4>
+    </div>*@
+
+    <div id="parent-container" class="cursor-pointer breadcrumb-wrapper mt-3">
+        <div class="">
+            <div id="successMessage" class="success-message text-center">
+                <h4>
+                    Your question has been received and is currently under review. We'll provide an answer as soon as possible.
+                </h4>
+            </div>
+        </div>
+        <div class="header-container">
+            <div class="col-md-10">
+                <h3 class="my-0 ml-3" data-toggle="collapse" href="#tab-con">
+                    @if(Model.PagedList.Count == 0)
+                   {
+                   <p>Be The First One To Ask A Question About This Product</p>
+                   }
+                   else
+                   {
+                   <p>Questions About This Product</p>
+                   }
+                </h3>
+            </div>
+            <div class="col-md-2">
+             @if (Model.CurrentSettings.AllowAnonymousUsers)
+            {
+           <button type="button" class="btn btn-primary my-0 mr-3" data-toggle="modal" data-target="#askQuestionModal">Ask a Question</button>
+           }
+            else
+            {
+                <a href="Login">Login To Ask A Question</a>
+            }
+            </div>
+        </div>
+        <div class="parent-container">
+            @foreach (var faq in Model.PagedList)
+            {
+                <div class="" id="ua">
+                    <div class="question mx-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <h4><b>Q: <span class="questions-colored">@faq.Question </span> </b></h4>
+
+                                </div>
+                            </div>
                         </div>
-                        <div id="collapse-@faqId" class="collapse" role="tabpanel" aria-labelledby="heading-@faqId" data-parent="#accordion">
-                            <div class="card-body" style="padding: 20px;">
-                                <h5>
-                                    <i>
-                                        @faq.Answer
-                                    </i>
-                                </h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <i >Asked by : @faq.AskedBy</i>
+                            </div>
+                            <div class="col-md-6">
+
+                            </div>
+                            <div class="col-md-2">
+                                <i class="text-dark"><b>@faq.AskedAt </b> </i>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="answer mx-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <h5><b>A:</b>@faq.Answer</h5>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <i > <b>Answered by: @faq.Responder </b> </i>
                             </div>
                         </div>
                     </div>
-                }
-                <div class="pull-right mx-3"></div>
-            </div>
-            <div class="sticky-footer"></div>
+                  <hr />
+                </div>
+            }
         </div>
     </div>
+    <div class="pagination-wrapper">
+        @Html.PagedListPager(Model.PagedList,
+        page => Url.Action("FAQWidget",
+        new { page = page, size = 5 ,productId = ViewBag.ProductId }),
+        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "faq-widget-container" }))
+    </div>
+
+
+    @Html.Partial("~/Plugins/FAQPlugin/Views/_AskQuestion.cshtml", Model.AskQuestionModel)
+
+
 </div>
-
-
-@Html.Partial("~/Plugins/FAQPlugin/Views/_AskQuestion.cshtml", Model.AskQuestionModel)
-            

@@ -2,7 +2,7 @@
 @using PagedList.Mvc
 @using PagedList;
 @model StaticPagedList<QuestionsViewModel>
-@{ 
+@{
     string view = "_AnsweredFAQs";
 
 }
@@ -13,44 +13,105 @@
             UpdateTargetId = "answeredQuestionsPane"
         }))
 {
-    <input type="hidden" name="view" value="@view"  />
-    <input type="hidden" name="pageNumber" value="@ViewBag.PageNumber"  />
+    <input type="hidden" name="view" value="@view" />
+    <input type="hidden" name="pageNumber" value="@ViewBag.PageNumber" />
     @Html.Partial("~/Plugins/FAQPlugin/Views/_PageSize.cshtml")
 
 }
+@using (Ajax.BeginForm("DeleteFAQ", "FAQAdmin", new AjaxOptions
+{
+    HttpMethod = "POST",
+    UpdateTargetId = "answeredQuestionsPane",
+    OnSuccess = "Deleted",
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Product Name</th>
-            <th>Question</th>
-            <th>Answer</th>
-            <th>Visibility</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var faq in Model)
-        {
-            <tr>
-                <td><b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = faq.ProductId })">@faq.ProductName</a></b></td>
-                <td>@faq.Question</td>
-                <td>
-                    <a href="#" class="answer-link" data-toggle="modal" data-questionupdate="@faq.Question" data-answerupdate="@faq.Answer" data-idupdate="@faq.FAQId" data-target="#editAnswerModal">
+}, new { id = "deleteFormInAnswered" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" id="deleteIdInAnswered" />
+    <input type="hidden" name="pageSize" value="@ViewBag.PageSize" />
+    <input type="hidden" name="pageNumber" value="@ViewBag.PageNumber" />
+    <input type="hidden" name="view" value="@view" />
+}
+<div class="custom-table">
+    <div class="row">
+        <div class="col-md-6">
+            <b>Question</b>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-4">
+                    Product
+                </div>
+                <div class="col-md-4">
+                    Last Modified
+                </div>
+                <div class="col-md-4">
+                    Actions
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--To Be Looped Ovwe-->
+    @foreach (var faq in Model)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <a class="question-link cursor-pointer text-dark" style="color:black;margin-top:10px;" data-toggle="collapse" data-target="#answer-@faq.FAQId" aria-expanded="false" onclick="toggleChevron(@faq.FAQId)">
+                    @faq.Question
+                    <i id="chevron-@faq.FAQId" class="fa fa-chevron-circle-down"></i>
+                </a>
+                <div style="padding-top:20px;" id="answer-@faq.FAQId" class="collapse mt-2">
+                    <a href="#" class="answer-link mt-" data-toggle="modal" data-questionupdate="@faq.Question" data-answerupdate="@faq.Answer" data-idupdate="@faq.FAQId" data-target="#editAnswerModal">
                         @faq.Answer
                     </a>
-                </td>
-                <td class="text-center">
-                    @using (Ajax.BeginForm("ChangeVisibility", "FAQAdmin", new { id = faq.FAQId, visibility = !faq.Visibility }, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "faq-list", OnSuccess = $"toggleIcon('iconid-{faq.FAQId}')" }))
-                    {
-                        <button type="submit" class="btn btn-link">
-                            <i id="iconid-@faq.FAQId" class="fa @(faq.Visibility ? "fa-eye" : "fa-eye-slash")"></i>
-                        </button>
-                    }
-                </td>
-            </tr>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-4">
+                        <a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = faq.ProductId })">@faq.ProductName</a>
+                    </div>
+                    <div class="col-md-4">
+                        @faq.LastModified
+                    </div>
+                    <div class="col-md-4">
+                        <div class="btn-group" role="group">
+                            <button type="button"
+                                    class="btn btn-danger btn-sm btn-uninstall"
+                                    data-id="@faq.FAQId"
+                                    data-question="@faq.Question"
+                                    data-view="@view">
+                                <i class="fa fa-trash"></i>
+                            </button>
+
+                            <!-- Toggle Visibility Button -->
+                            <button type="button" class="btn btn-sm btn-primary" onclick="submitVisibilityForm('@faq.FAQId', '@faq.Visibility')">
+                                <i class="fa @(faq.Visibility ? "fa-eye" : "fa-eye-slash")"></i>
+                            </button>
+
+                            <!-- Edit Button -->
+                            <button class="btn btn-success btn-sm" data-toggle="modal" data-questionupdate="@faq.Question" data-answerupdate="@faq.Answer" data-idupdate="@faq.FAQId" data-target="#editAnswerModal">
+                                <i class="fa-regular fa fa-pencil"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        using (Ajax.BeginForm("ChangeVisibility", "FAQAdmin", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "answeredQuestionsPane" }, new { id = "visibilityForm-" + faq.FAQId }))
+        {
+            <input type="hidden" name="id" value="@faq.FAQId" />
+            <input type="hidden" name="visibility" id="visibilityInput-@faq.FAQId" value="@faq.Visibility" />
+            <input type="hidden" name="view" value="@view" />
+            <input type="hidden" name="pageSize" value="@ViewBag.PageSize" />
+            <input type="hidden" name="pageNumber" value="@ViewBag.PageNumber" />
         }
-    </tbody>
-</table>
+    }
+
+</div>
+
 
 <!--Update Modal-->
 <div class="modal inmodal" id="editAnswerModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -73,7 +134,7 @@
                     <label class="col-form-label"><h3><b id="modal-question-update">Question : </b></h3></label>
                     <div class="form-group">
                         <label for="answerText" class="col-form-label" id="modal-answer-update">Answer:</label>
-                        <textarea required class="form-control" name="answer" id="answerText" rows="5"></textarea>
+                        <textarea required class="form-control" name="answer" maxlength="254" id="answerText" rows="5"></textarea>
                         <input type="hidden" name="pageSize" value="@ViewBag.PageSize" />
                         <input type="hidden" name="pageNumber" value="@ViewBag.PageNumber" />
                         <input type="number" hidden name="id" id="modal-question-id-update">
@@ -92,7 +153,7 @@
 <div class="pagination-wrapper">
     @Html.PagedListPager(Model,
     page => Url.Action("DisplayTabs",
-    new {view=view, pageNumber = page, pageSize = ViewBag.pageSize }),
+    new { view = view, pageNumber = page, pageSize = ViewBag.pageSize }),
     PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "answeredQuestionsPane" }))
 </div>
 

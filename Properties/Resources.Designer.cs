@@ -67,19 +67,47 @@ namespace FAQPlugin.Properties {
         ///SET QUOTED_IDENTIFIER ON
         ///GO
         ///
+        ///-- Create the Settings table with a single row constraint
+        ///CREATE TABLE [dbo].[FAQSettings] (
+        ///    [Id] [int] NOT NULL PRIMARY KEY CHECK ([Id] = 1), -- Ensures only one row
+        ///    [AllowAnonymousUsersToAnswerQuestions] [bit] NOT NULL DEFAULT 0,
+        ///     
+        ///) ON [PRIMARY]
+        ///GO
+        ///
+        ///-- Insert the default settings row
+        ///INSERT INTO [dbo].[FAQSettings] (Id, AllowAnonymousUsersToAnswerQuestions, DefaultResponderName)
+        ///VALUES (1, 0, &apos;Admin&apos;)
+        ///GO
+        ///.
+        /// </summary>
+        internal static string create_faq_settings {
+            get {
+                return ResourceManager.GetString("create_faq_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SET ANSI_NULLS ON
+        ///GO
+        ///
+        ///SET QUOTED_IDENTIFIER ON
+        ///GO
+        ///
         ///CREATE TABLE [dbo].[FAQ](
-        ///    [Id] [int] IDENTITY(1,1) NOT NULL,
-        ///    [Answer] [nvarchar](max) NOT NULL,
+        ///    [Id] [int] IDENTITY(1,1) ,
+        ///    [Question] [nvarchar](255) NOT NULL,
+        ///    [Answer] [nvarchar](255) NULL,
         ///    [UserId] [int] NULL,
         ///    [CreatedDate] [datetime] NULL,
+        ///    [ProductId] [int] NOT NULL,
+        ///    [IsAnswered] [bit] NULL,
+        ///    [Visibility] [bit] NULL,
         /// CONSTRAINT [PK_FAQ] PRIMARY KEY CLUSTERED 
         ///(
         ///    [Id] ASC
-        ///)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-        ///) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-        ///GO
-        ///
-        ///ALTER TABLE [dbo].[FAQ]  WITH CHECK ADD  CON [rest of string was truncated]&quot;;.
+        ///)WITH ( IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+        ///) ON [PRIMAR [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string create_faq_table {
             get {
@@ -89,7 +117,7 @@ namespace FAQPlugin.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to DROP TABLE [dbo].[FAQ]
-        ///GO.
+        ///DROP TABLE [dbo].[FAQSettings].
         /// </summary>
         internal static string drop_faq_table {
             get {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,17 +9,13 @@ namespace FAQPlugin.Models
 {
     public class RetailViewModel
     {
-       public IList<QuestionsViewModel> QuestionsList { get; set; }
-
+       public StaticPagedList<QuestionsViewModel> PagedList { get; set; }
        public AskQuestionModel AskQuestionModel { get; set; }
-
+        public FAQSettings CurrentSettings { get; set; }
         public RetailViewModel()
         {
-            QuestionsList = new List<QuestionsViewModel>();
             AskQuestionModel = new AskQuestionModel();
+            CurrentSettings = new FAQSettings();
         }
- 
-          
-
     }
 }

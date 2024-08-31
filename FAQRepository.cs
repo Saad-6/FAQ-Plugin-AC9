@@ -47,7 +47,7 @@ namespace FAQPlugin
             }
             return questions.List<FAQ>();
         }
-        public int GetCount(QuestionType questionType = QuestionType.All)
+        public int GetCount(QuestionType questionType = QuestionType.All , int productId = 0)
         {
             var count = NHibernateHelper.CreateCriteria<FAQ>().SetProjection(Projections.RowCount());
      
@@ -60,6 +60,11 @@ namespace FAQPlugin
             {
                 count
                .Add(Restrictions.Eq("IsAnswered", false));
+            }
+            if (productId != 0)
+            {
+                count.CreateAlias("Product", "product")
+               .Add(Restrictions.Eq("product.Id", productId));
             }
             return count
                   .UniqueResult<int>();

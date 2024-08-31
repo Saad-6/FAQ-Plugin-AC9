@@ -13,14 +13,14 @@
                 new AjaxOptions
                 {
                     HttpMethod = "POST",
-                    OnSuccess = "$('#askQuestionModal').modal('hide'); $('#successMessage').show();",
+                    OnSuccess = "$('#question').val('');$('#askQuestionModal').modal('hide');const successMessage = document.getElementById('successMessage'); successMessage.style.display = 'block'; successMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });  setTimeout(function () {\r\n      successMessage.style.display = 'none';\r\n  }, 10000);",
                     OnFailure = "toastr.error('Input Field cannot be empty');"
                 }))
                 {
                     <label class="col-form-label"><h3><b id="modal-question">Ask a Question: </b></h3></label>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Question, "Question:")
-                        @Html.TextAreaFor(m => m.Question, new { @class = "form-control", placeholder = "Your question here ..." })
+                        @Html.TextAreaFor(m => m.Question, new { @id = "question", @class = "form-control", placeholder = "Your question here ...", @maxlength = "254" })
                         @Html.ValidationMessageFor(m => m.Question)
                         @Html.HiddenFor(m => m.ProductId)
                     </div>

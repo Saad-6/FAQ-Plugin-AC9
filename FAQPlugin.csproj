@@ -78,15 +78,13 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="NHibernate, Version=5.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\packages\NHibernate.5.0.3\lib\net461\NHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Bin\PagedList.dll</HintPath>
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
     </Reference>
     <Reference Include="Remotion.Linq, Version=2.1.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.Linq.2.1.2\lib\net45\Remotion.Linq.dll</HintPath>
@@ -135,7 +133,6 @@
   <ItemGroup>
     <Compile Include="Controllers\FAQAdminController.cs" />
     <Compile Include="Controllers\FAQRetailController.cs" />
-    <Compile Include="FAQMapping.cs" />
     <Compile Include="FAQRepository.cs" />
     <Compile Include="IFAQRepository.cs" />
     <Compile Include="FAQ.cs" />
@@ -143,6 +140,7 @@
     <Compile Include="Models\FAQParams.cs" />
     <Compile Include="Models\QuestionsViewModel.cs" />
     <Compile Include="Models\QuestionType.cs" />
+    <Compile Include="Models\FAQSettings.cs" />
     <Compile Include="Models\SortExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FAQPlugin.cs" />
@@ -153,6 +151,15 @@
     </Compile>
     <Compile Include="RouteProvider.cs" />
     <Compile Include="Models\RetailViewModel.cs" />
+    <Compile Include="Utility\Utility.cs" />
+    <None Include="packages.config" />
+    <Content Include="Content\index.js" />
+    <Content Include="Content\styles.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Configure.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Views\_AskQuestion.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -186,9 +193,9 @@
     <None Include="app.config" />
     <None Include="Views\_FAQWidget.cshtml" />
     <None Include="Views\Index.cshtml" />
+    <Content Include="Resource\create_faq_settings.sql" />
     <Content Include="Resource\create_faq_table.sql" />
     <Content Include="Resource\drop_faq_table.sql" />
-    <Content Include="Resource\notification.js" />
     <Content Include="Views\web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -199,7 +206,7 @@
     <None Include="Views\_UnAnsweredFAQs.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\AbleCommerce\Website\AbleCommerce.csproj">
+    <ProjectReference Include="..\Website\AbleCommerce.csproj">
       <Project>{482b9a46-206d-4a84-aae4-ca54efe63ef2}</Project>
       <Name>AbleCommerce</Name>
     </ProjectReference>

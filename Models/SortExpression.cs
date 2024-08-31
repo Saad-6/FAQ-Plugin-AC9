@@ -10,6 +10,7 @@ namespace FAQPlugin.Models
     {
         ProductName,
         Question,
-        Answer
+        Answer,
+        LastModified
     }
 }

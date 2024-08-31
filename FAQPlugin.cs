@@ -1,5 +1,7 @@
-﻿using CommerceBuilder.Plugins;
+﻿using CommerceBuilder.Common;
+using CommerceBuilder.Plugins;
 using CommerceBuilder.Utility;
+using FAQPlugin.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -21,25 +23,29 @@ namespace FAQPlugin
             {
                 string connectionString = ConfigurationManager.ConnectionStrings["AbleCommerce"].ConnectionString;
                 var errors = RunScript(connectionString, Properties.Resources.create_faq_table);
-                if (errors.Count > 0)
+                if (errors.Count > 0 )
                 {
-                    Logger.Error(string.Format("There are errors when trying to install '{0}', please change log level to info for error details.", this.Manifest.Name));
+                    Logger.Error(string.Format("There are errors when trying to create the faq table '{0}', please change log level to info for error details.", this.Manifest.Name));
                     errors.ForEach(e => Logger.Info(e));
+                   
                 }
                 else
                 {
-                    installed = true;
+                    var currentStoreSettings = AbleContext.Current.Store.Settings;
+                    var defaultSettings = new FAQSettings();
+                    currentStoreSettings.SetValueByKey("FAQ_AllowAnonymousUsers", defaultSettings.AllowAnonymousUsers.ToString());
+                    currentStoreSettings.SetValueByKey("FAQ_DefaultResponderName", defaultSettings.DefaultResponderName);
+                    currentStoreSettings.Save();
+                    installed = true;  
                 }
 
             }
-            catch (Exception e)
+            catch (SqlException e )
             {
                 Logger.Error(e.Message, e);
             }
-
             return installed;
         }
-
         public override bool UnInstall()
         {
             

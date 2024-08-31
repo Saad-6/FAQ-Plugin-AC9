@@ -19,27 +19,75 @@
     @Html.Partial("~/Plugins/FAQPlugin/Views/_PageSize.cshtml")
 }
 
-<table class="table table-striped ">
-    <thead>
-        <tr>
-            <th>Product Name</th>
-            <th>Question</th>
-            <th>Answer</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var unAnsweredQuestions in Model)
-        {
-            <tr>
-                <td><b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = unAnsweredQuestions.ProductId })">@unAnsweredQuestions.ProductName</a></b></td>
-                <td>@unAnsweredQuestions.Question</td>
-                <td>
-                    <button class="btn btn-primary open-answer-modal" data-toggle="modal" data-target="#AnswerModal" data-question="@unAnsweredQuestions.Question" data-id="@unAnsweredQuestions.FAQId">Give Answer</button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@using (Ajax.BeginForm("DeleteFAQ", "FAQAdmin", new AjaxOptions
+{
+    HttpMethod = "POST",
+    UpdateTargetId = "unanswerQuestionsPane",
+    OnSuccess = "Deleted",
+
+}, new { id = "deleteFormInUnanswered" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" id="deleteIdInUnanswered" />
+    <input type="hidden" name="pageSize" value="@ViewBag.PageSize" />
+    <input type="hidden" name="pageNumber" value="@ViewBag.PageNumber" />
+    <input type="hidden" name="view" value="@view" />
+}
+
+<div class="custom-table">
+    <!-- Header Row -->
+    <div class="row">
+        <div class="col-md-3">
+            <b>Product Name</b>
+        </div>
+        <div class="col-md-6">
+            <b>Question</b>
+        </div>
+        <div class="col-md-3">
+            <b>Actions</b>
+        </div>
+    </div>
+    <hr />
+
+    <!-- Content Rows - To Be Looped Over -->
+    @foreach (var unAnsweredQuestions in Model)
+    {
+        <div class="row mb-3">
+            <!-- Product Name Column -->
+            <div class="col-md-3">
+                <b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = unAnsweredQuestions.ProductId })">@unAnsweredQuestions.ProductName</a></b>
+            </div>
+
+            <!-- Question Column -->
+            <div class="col-md-6">
+                @unAnsweredQuestions.Question
+            </div>
+
+            <!-- Actions Column -->
+            <div class="col-md-3">
+                <div class="btn-group">
+                    <button class="btn btn-primary btn-sm open-answer-modal"
+                            data-toggle="modal"
+                            data-target="#AnswerModal"
+                            data-question="@unAnsweredQuestions.Question"
+                            data-id="@unAnsweredQuestions.FAQId">
+                        Give Answer
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-danger btn-sm btn-uninstall"
+                            data-id="@unAnsweredQuestions.FAQId"
+                            data-question="@unAnsweredQuestions.Question"
+                            data-view="@view">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <hr />
+    }
+</div>
+
 
 <!-- Answer Modal -->
 <div class="modal inmodal" id="AnswerModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -62,7 +110,7 @@
                     <label class="col-form-label"><h3><b id="modal-question">Question: </b></h3></label>
                     <div class="form-group">
                         <label for="answerText" class="col-form-label"><h4>Answer : </h4></label>
-                        <textarea required class="form-control" placeholder="Your answer ..." name="answer" id="answerText" rows="5"></textarea>
+                        <textarea required maxlength="254" class="form-control" placeholder="Your answer ..." name="answer" id="answerText" rows="5"></textarea>
                         <input type="hidden" name="id" id="modal-question-id">
                         <input name="view" value="@view" hidden />
                         <input type="hidden" name="pageSize" value="@ViewBag.PageSize" />
