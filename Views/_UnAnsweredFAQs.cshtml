@@ -37,11 +37,12 @@
 <div class="custom-table">
     <!-- Header Row -->
     <div class="row">
-        <div class="col-md-3">
-            <b>Product Name</b>
-        </div>
+
         <div class="col-md-6">
             <b>Question</b>
+        </div>
+        <div class="col-md-3">
+            <b>Product Name</b>
         </div>
         <div class="col-md-3">
             <b>Actions</b>
@@ -53,15 +54,18 @@
     @foreach (var unAnsweredQuestions in Model)
     {
         <div class="row mb-3">
-            <!-- Product Name Column -->
-            <div class="col-md-3">
-                <b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = unAnsweredQuestions.ProductId })">@unAnsweredQuestions.ProductName</a></b>
-            </div>
 
             <!-- Question Column -->
             <div class="col-md-6">
                 @unAnsweredQuestions.Question
             </div>
+
+            <!-- Product Name Column -->
+            <div class="col-md-3">
+                <b><a target="_blank" href="@Url.Action("EditProduct", "Product", new { ProductId = unAnsweredQuestions.ProductId })">@unAnsweredQuestions.ProductName</a></b>
+            </div>
+
+
 
             <!-- Actions Column -->
             <div class="col-md-3">

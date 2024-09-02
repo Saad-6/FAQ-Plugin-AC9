@@ -44,7 +44,7 @@ public class FAQAdminController : AbleAdminController
             DefaultResponderName = currentSettings.GetValueByKey("FAQ_DefaultResponderName")
         };
         currentSettings.Save();
-        ViewBag.Success = true;
+        ViewBag.Success = true;        
         return View("~/Plugins/FAQPlugin/Views/Configure.cshtml", viewModel); 
     }
     public ActionResult DisplayTabs(string view, int pageNumber = 1, int pageSize = 5, SortExpression sortExpression = SortExpression.Question)

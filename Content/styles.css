@@ -34,3 +34,11 @@
 .parent-container {
     padding: 40px;
 }
+.question-link,#question-links {
+    background-color: #f8f9fa;
+    color: black;
+    margin-top: 10px;
+}
+.dropdown-question{
+    padding-top:20px;
+}

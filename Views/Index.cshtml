@@ -2,6 +2,7 @@
     ViewBag.Title = "Manage Questions";
     ViewBag.PageCaption = "Questions About Product";
 }
+<link rel="stylesheet" href="~/Plugins/FAQPlugin/Content/styles.css" />
 <div class="wrapper wrapper-content animated fadeInRight" id="containerId">
     <div class="ibox float-e-margins py-3">
         <div class="ibox-title">
@@ -164,7 +165,7 @@
             });
 
             // Call this function after an answer is submitted
-           
+
 
             // Call this function after an answer is updated
 
@@ -208,18 +209,14 @@
         toastr.success('Question deleted successfully!');
         callAjax();
         }
-        function toggleChevron(faqId) {
-            var chevron = $("#chevron-" + faqId);
-            var answer = $("#answer-" + faqId);
+        function toggleChevron(id) {
 
-            answer.on('shown.bs.collapse', function () {
-                chevron.removeClass("fa-chevron-down").addClass("fa-chevron-up");
-            });
+            var chevron = $("#chevron-" + id);
+            var answerDiv = $("#answer-" + id);
 
-            answer.on('hidden.bs.collapse', function () {
-                chevron.removeClass("fa-chevron-up").addClass("fa-chevron-down");
-            });
+            answerDiv.slideToggle();
+            chevron.toggleClass('fa-chevron-down fa-chevron-up');
         }
-       
+
     </script>
 }

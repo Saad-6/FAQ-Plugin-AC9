@@ -9,17 +9,17 @@
             <div class="col-md-10">
                 <h5> Settings</h5>
             </div>
-           
+
         </div>
         <div class="row">
-        
-     
+
+
         </div>
         <div class="ibox-content">
-            @using (Html.BeginForm("SaveSettings", "FAQAdmin", FormMethod.Post, new { @class = "form-horizontal" }))
+            @using (Html.BeginForm("SaveSettings", "FAQAdmin", FormMethod.Post, new { @id = "faqSettingsForm", @class = "form-horizontal" }))
             {
                 <div class="form-group">
-                  
+
                     <div class="checkbox checkbox-success">
                         @Html.CheckBoxFor(m => m.AllowAnonymousUsers)
                         <label for="TellAFriendCaptcha" class="tooltip-label" data-content="If checked, Users that are not logged in can ask questions about products">Allow Anonymous Users To Ask Questions</label>
@@ -27,29 +27,16 @@
                 </div>
 
                 <div class="form-group">
-                   
+
                     <label class="tooltip-label" data-content="This will appears as the 'Answered By' in product'QnA">Default Responder's' Name</label>
                     @Html.TextBoxFor(model => model.DefaultResponderName, new { @class = "form-control", style = "width:50%;" })
                 </div>
 
-                <div class="form-group">
-                    <div class="row">
-                    <div class="col-md-2">
-                        <a class="btn btn-default" href="@Url.Action("Index","FAQAdmin")">back</a>
-                    </div>
-                    <div class="col-md-3">
-                        <input type="submit" value="Save Settings" class="btn btn-primary" />
-                    </div>
-                        <div class="col-md-7">
-
-                        </div>
-
-                    </div>
-                </div>
+              
             }
             @if (ViewBag.Success != null && ViewBag.Success)
             {
-                <div id="successMessage" class="text-success text-center mt-4">
+                <div id="successMessage" class="text-primary text-center mt-4">
                     <h5>Your settings have been updated!</h5>
                 </div>
             }
@@ -59,3 +46,25 @@
 
     </div>
 </div>
+<div class="sticky-footer">
+    <div class="pull-left">
+        <a id="CancelBtn" href="@Url.Action("Configure","FAQAdmin")" class="btn btn-default">Cancel</a>
+        <a href="@Url.Action("Index","FAQAdmin")" class="btn-delete btn btn-default">Go Back</a>
+    </div>
+    <div class="pull-right">
+
+        <a type="button" id="saveButton" class="btn btn-primary">Save</a>
+
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        document.getElementById("saveButton").addEventListener("click", function () {
+            // Trigger form submission by form id
+            console.log("ENtered")
+            document.getElementById("faqSettingsForm").submit();
+            console.log("submitted")
+        });
+    </script>
+
+}
